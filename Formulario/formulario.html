@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrellas brillantes</title>
+    <link rel="stylesheet" href="formulario.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>✨Formulario las estrellas✨</h1>
+        
+        <div class="formularios-grid">
+
+            <div class="formulario">
+                <h2>Formulario de Contacto</h2>
+                <form class="form-contenedor" onsubmit="enviar(event)">
+                    
+                    <div class="campo-doble">
+                        <div class="form-grupo">
+                            <label for="nombre">Nombre <span class="necesario">*</span></label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-grupo">
+                            <label for="apellido">Apellido <span class="necesario">*</span></label>
+                            <input type="text" id="apellido" name="apellido" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="email1">Correo <span class="necesario">*</span></label>
+                        <input type="email" id="email1" name="email" required>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="mensaje">Mensaje <span class="necesario">*</span></label>
+                        <textarea id="mensaje" name="mensaje" required></textarea>
+                    </div>
+
+                    <div class="botones">
+                        <button type="submit">Enviar</button>
+                        <button type="reset">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="formulario">
+                <h2>Formulario de Registro</h2>
+                <form class="form-contenedor" onsubmit="enviar(event)">
+                    
+                    <div class="form-grupo">
+                        <label for="usuario">Usuario <span class="necesario">*</span></label>
+                        <input type="text" id="usuario" name="usuario" required minlength="4">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="email2">Correo <span class="necesario">*</span></label>
+                        <input type="email" id="email2" name="email" required>
+                    </div>
+
+                    <div class="campo-doble">
+                        <div class="form-grupo">
+                            <label for="password">Contraseña <span class="necesario">*</span></label>
+                            <input type="password" id="password" name="password" required minlength="6">
+                        </div>
+                        <div class="form-grupo">
+                            <label for="confirmar">Confirmar <span class="necesario">*</span></label>
+                            <input type="password" id="confirmar" name="confirmar" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>Género</label>
+                        <div class="radio-grupo">
+                            <div class="radio-opcion">
+                                <input type="radio" id="masculino" name="genero" value="masculino">
+                                <label for="masculino">Masculino</label>
+                            </div>
+                            <div class="radio-opcion">
+                                <input type="radio" id="femenino" name="genero" value="femenino">
+                                <label for="femenino">Femenino</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label class="checkbox-opcion">
+                            <input type="checkbox" name="terminos" required>
+                            <span>Acepto los términos <span class="necesario">*</span></span>
+                        </label>
+                    </div>
+
+                    <div class="botones">
+                        <button type="submit">Registrarse</button>
+                        <button type="reset">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="formulario">
+                <h2>Encuesta Estelar</h2>
+                <form class="form-contenedor" onsubmit="enviar(event)">
+                    
+                    <div class="form-grupo">
+                        <label for="experiencia">¿Cómo calificas la experiencia? <span class="necesario">*</span></label>
+                        <select id="experiencia" name="experiencia" required>
+                            <option value="">Selecciona una opción...</option>
+                            <option value="excelente">Excelente ✨</option>
+                            <option value="buena">Buena ⭐</option>
+                            <option value="regular">Regular ☄️</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label>¿Qué te interesó más?</label>
+                        <div class="checkbox-grupo">
+                            <div class="checkbox-opcion">
+                                <input type="checkbox" id="interes1" name="interes" value="diseno">
+                                <label for="interes1">El diseño de la página</label>
+                            </div>
+                            <div class="checkbox-opcion">
+                                <input type="checkbox" id="interes2" name="interes" value="contenido">
+                                <label for="interes2">El contenido</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="comentarios">Sugerencias para mejorar</label>
+                        <textarea id="comentarios" name="comentarios" placeholder="Déjanos tus ideas..."></textarea>
+                    </div>
+
+                    <div class="botones">
+                        <button type="submit">Enviar Encuesta</button>
+                        <button type="reset">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function enviar(event) {
+            event.preventDefault();
+            alert('✓ Formulario procesado correctamente');
+            event.target.reset();
+        }
+    </script>
+    
+</body>
+</html>

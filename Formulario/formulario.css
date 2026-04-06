@@ -1,0 +1,219 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f0f8;
+    padding: 20px;
+    margin: 0;
+    /* Enlace actualizado a una imagen de estrellas en alta resolución */
+    background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2000&auto=format&fit=crop'); 
+    background-size: cover;                
+    background-position: center;          
+    background-attachment: fixed;        
+}
+
+.contenedor-formulario {
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 20px;
+    border-radius: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);    
+}
+
+.container {
+    max-width: 1200px; /* Ampliado ligeramente para acomodar 3 formularios */
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #d6aafa;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Un toque de sombra para que resalte sobre las estrellas */
+}
+
+.formularios-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 36px;            
+    justify-content: center;
+    margin-top: 60px;      
+    margin-bottom: 50px;  
+}
+
+.formulario {
+    background: white;
+    padding: 20px;
+    border-radius: 8px; /* Bordes un poco más suaves */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 280px;
+    max-width: 380px; /* Ajustado para que los 3 se vean bien en pantallas grandes */
+}
+
+.formulario h2 {
+    color: #714aa8;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 2px solid #c39de4;
+    padding-bottom: 8px;
+}
+
+.form-contenedor {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+label {
+    color: #000000;
+    font-weight: 500;
+    font-size: 0.95em;
+}
+
+input, textarea, select {
+    padding: 10px; /* Un poco más de padding para mayor comodidad */
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Bordes más redondeados y modernos */
+    font-family: Arial, sans-serif;
+    font-size: 1em;
+    width: 100%; 
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: 2px solid #b4a1ce;
+    border-color: #b8a0d9;
+}
+
+textarea {
+    min-height: 88px;
+    resize: vertical;
+}
+
+.campo-doble {
+    display: flex;
+    gap: 15px;
+}
+
+.campo-doble .form-grupo {
+    flex: 1;
+}
+
+.botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    flex: 1;
+    padding: 10px;
+    border: none; /* Quitamos el borde para un estilo más limpio */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* Transición suave al pasar el mouse */
+}
+
+button[type="submit"] {
+    background: #d5baee;
+    color: #333;
+}
+
+button[type="submit"]:hover {
+    background: #c6ade0;
+}
+
+button[type="reset"] {
+    background: #e0e0e0;
+    color: #333;
+}
+
+button[type="reset"]:hover {
+    background: #cccccc;
+}
+
+.necesario {
+    color: #a82626;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.radio-grupo, .checkbox-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.radio-opcion, .checkbox-opcion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-opcion label, .checkbox-opcion label, .checkbox-opcion span {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+/* Consultas de Medios (Media Queries) para Responsividad */
+@media (max-width: 900px) {
+    .formularios-grid {
+        gap: 25px;
+    }
+    .formulario {
+        max-width: 45%; /* Dos columnas en tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .formularios-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .formulario {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .campo-doble {
+        display: flex;
+        flex-direction: column; /* Apilar campos dobles en pantallas pequeñas */
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .formulario {
+        padding: 15px;
+    }
+
+    input, textarea, select {
+        font-size: 16px; /* Evita que en iPhone haga zoom automático */
+    }
+    
+    .botones {
+        flex-direction: column;
+    }
+}
