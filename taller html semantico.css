@@ -1,0 +1,284 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN GENERAL
+   ========================================= */
+:root {
+    /* Paleta de colores Pastel con difuminados */
+    --pastel-bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    --pastel-pink-gradient: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+    --pastel-blue: #a1c4fd;
+    --pastel-blue-gradient: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    --pastel-mint: #cfffe5;
+    
+    --text-dark: #4a4a4a;
+    --text-light: #7a7a7a;
+    --white: #ffffff;
+}
+
+html {
+    scroll-behavior: smooth; /* Movimiento suave al navegar por los enlaces */
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: var(--pastel-bg-gradient);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* =========================================
+   CABECERA (HEADER) Y NAVEGACIÓN
+   ========================================= */
+header {
+    background: rgba(255, 255, 255, 0.85); /* Difuminado/Transparencia */
+    backdrop-filter: blur(10px); /* Efecto cristal */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+    transition: transform 0.4s ease;
+}
+
+.logo:hover {
+    transform: rotate(15deg) scale(1.1); /* Movimiento en el logo */
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    color: #8e9eab;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-left: 25px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background-image: var(--pastel-pink-gradient);
+    color: var(--white);
+    transform: translateY(-2px); /* Movimiento sutil hacia arriba */
+}
+
+/* =========================================
+   SECCIÓN INICIO (HERO)
+   ========================================= */
+.hero-section {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: var(--pastel-blue-gradient);
+    color: var(--text-dark);
+    padding: 0 20px;
+    border-bottom-left-radius: 50% 10%;
+    border-bottom-right-radius: 50% 10%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.hero-section p {
+    font-size: 1.3rem;
+    color: #fdfbfb;
+}
+
+/* =========================================
+   SECCIONES DE CONTENIDO GENERAL
+   ========================================= */
+.content-section {
+    padding: 60px 10%;
+}
+
+h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #b58ecc;
+}
+
+/* =========================================
+   TARJETAS DE NOTICIAS
+   ========================================= */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    transition: transform 0.4s ease, box-shadow 0.4s ease; /* Animaciones */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Movimiento: la tarjeta flota al pasar el mouse */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card:hover img {
+    transform: scale(1.05); /* Efecto zoom en la imagen */
+}
+
+.card h3, .card p {
+    padding: 10px 20px;
+}
+
+/* =========================================
+   EVENTOS Y CONTACTO
+   ========================================= */
+.event-list {
+    list-style-type: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.event-list li {
+    background: rgba(255, 255, 255, 0.6);
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid var(--pastel-blue);
+    transition: background 0.3s ease;
+}
+
+.event-list li:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.contact-box {
+    text-align: center;
+    background-image: var(--pastel-pink-gradient);
+    border-radius: 20px;
+    margin: 0 10% 60px 10%;
+    color: var(--white);
+    padding: 50px 20px;
+}
+
+.contact-box h2 {
+    color: var(--white);
+    margin-top: 0;
+}
+
+/* =========================================
+   FORMULARIO DE CONTACTO
+   ========================================= */
+.contact-box p {
+    margin-bottom: 30px;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    /* Fondo semitransparente para efecto cristal sobre el gradiente pastel */
+    background: rgba(255, 255, 255, 0.2); 
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block; /* Convertimos el label (línea) a bloque para estructurar mejor */
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--white);
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box; /* Asegura que el padding no desborde el ancho total */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Efecto de movimiento y resplandor al hacer clic en los campos */
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
+}
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--white);
+    color: #d57eeb; /* Tono a juego con el gradiente de fondo */
+    border: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background-color: #fdfbfb;
+}
+
+/* =========================================
+   PIE DE PÁGINA (FOOTER)
+   ========================================= */
+footer {
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    border-top: 1px solid #eaeaea;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Laura Cristina - Tonos Pastel</title>
+    <link rel="stylesheet" href="taller css pro.css">
+</head>
+<body class="theme-light">
+    <input type="checkbox" id="sidebar-toggle" class="sr-only">
+    
+    <label for="sidebar-toggle" class="menu-btn" aria-label="Abrir menú">
+        <span class="menu-btn_line"></span>
+        <span class="menu-btn_line"></span>
+        <span class="menu-btn_line"></span>
+    </label>
+    
+    <label for="sidebar-toggle" class="sidebar-overlay"></label>
+    
+    <nav class="sidebar">
+        <ul class="sidebar_nav">
+            <li><a href="#about">Sobre mí</a></li>
+            <li><a href="#projects">Proyectos</a></li>
+            <li><a href="#contact">Contacto</a></li>
+        </ul>
+        <p class="sidebar_note">Aplica la clase .theme-dark al body para ver el modo oscuro.</p>
+    </nav>
+
+    <section id="about" class="hero">
+        <div class="hero_bg"></div>
+        
+        <div class="hero_orb hero_orb--1"></div>
+        <div class="hero_orb hero_orb--2"></div>
+        <div class="hero_orb hero_orb--3"></div>
+        <div class="hero_orb hero_orb--4 animate-float"></div>
+
+        <div class="glass-card">
+            <div class="about_avatar-container animate-float">
+                <svg class="about_avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            
+            <h1 class="glass-card_title animate-reveal-card delay-1">Hola, soy Laura Cristina</h1>
+            <p class="glass-card_text animate-reveal-card delay-2">Desarrolladora Frontend | Especialista en UI y CSS Avanzado</p>
+        </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+        <h2 class="section-title">Mis Proyectos</h2>
+        
+        <div class="grid">
+            <div class="card animate-reveal-card delay-1">
+                <img class="card_image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqfGYj9FU7VWWIFHBh6aiwhHbHY2tiGrhsqaS6Kh7LJ9NM4ZImsVsrpuUiT73W" alt="App de Notas Pastel">
+                <div class="card_body">
+                    <h3 class="card_title">App de Notas Pastel</h3>
+                    <p class="card_description">Una aplicación sutil y elegante.</p>
+                    <label for="modal-1" class="btn">Ver detalles</label>
+                </div>
+            </div>
+            
+            <input type="checkbox" id="modal-1" class="sr-only">
+            <label for="modal-1" class="modal-overlay"></label>
+            <div class="modal" role="dialog" aria-labelledby="modal-1-title">
+                <label for="modal-1" class="modal_close" aria-label="Cerrar">X</label>
+                <h2 id="modal-1-title" class="modal_title">App de Notas Pastel</h2>
+                <p class="modal_description">Desarrollo completo usando BEM y variables CSS para gestionar temas y contrastes suaves.</p>
+                <div class="modal_tags">
+                    <span class="card_tag">HTML</span>
+                    <span class="card_tag">CSS</span>
+                </div>
+            </div>
+
+            <div class="card animate-reveal-card delay-2">
+                <img class="card_image" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ-5GcGuLBpa0H1r17QcMj7NKp2WjIhcjp94njESetXdMMZfSOG16xAPhU0lsOA" alt="Dashboard Relax">
+                <div class="card_body">
+                    <h3 class="card_title">Dashboard Relax</h3>
+                    <p class="card_description">Panel administrativo sin estrés visual.</p>
+                    <label for="modal-2" class="btn">Ver detalles</label>
+                </div>
+            </div>
+
+            <input type="checkbox" id="modal-2" class="sr-only">
+            <label for="modal-2" class="modal-overlay"></label>
+            <div class="modal" role="dialog" aria-labelledby="modal-2-title">
+                <label for="modal-2" class="modal_close" aria-label="Cerrar">X</label>
+                <h2 id="modal-2-title" class="modal_title">Dashboard Relax</h2>
+                <p class="modal_description">Implementación de Glassmorphism avanzado y grillas dinámicas.</p>
+                <div class="modal_tags">
+                    <span class="card_tag">CSS Grid</span>
+                    <span class="card_tag">UI/UX</span>
+                </div>
+            </div>
+
+            <div class="card animate-reveal-card delay-3">
+                <img class="card_image" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSOPGbm9dgiJk5Qqj7hYi2KGjfThULQGY_zERq5cqQBIPFIROX0_nsaS5Wf6eyh" alt="E-commerce Botánico">
+                <div class="card_body">
+                    <h3 class="card_title">E-commerce Botánico</h3>
+                    <p class="card_description">Tienda virtual con animaciones puras.</p>
+                    <label for="modal-3" class="btn">Ver detalles</label>
+                </div>
+            </div>
+
+            <input type="checkbox" id="modal-3" class="sr-only">
+            <label for="modal-3" class="modal-overlay"></label>
+            <div class="modal" role="dialog" aria-labelledby="modal-3-title">
+                <label for="modal-3" class="modal_close" aria-label="Cerrar">X</label>
+                <h2 id="modal-3-title" class="modal_title">E-commerce Botánico</h2>
+                <p class="modal_description">Uso exhaustivo de keyframes para micro-interacciones de carrito y productos.</p>
+                <div class="modal_tags">
+                    <span class="card_tag">Keyframes</span>
+                    <span class="card_tag">BEM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

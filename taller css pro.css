@@ -1,0 +1,351 @@
+/* ========================================================
+   MÓDULO 01: BEM & VARIABLES (Design Tokens en Pastel)
+======================================================== */
+:root {
+    /* Paleta Pastel Personalizada */
+    --color-brand: #ffb7b2; /* Rosa pastel */
+    --color-accent: #b2e2f2; /* Azul pastel */
+    --color-surface: #fffdf7; /* Crema muy claro */
+    --color-surface-alt: #f5f0e6; 
+    --color-text: #5c5470; /* Morado/gris suave para buen contraste */
+    --color-text-muted: #9fa4c4;
+    --color-border: #eae6df;
+
+    /* Espaciado fluido */
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-section: clamp(3rem, 8vw, 8rem); 
+
+    /* Bordes y Sombras suaves */
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 4px 10px rgba(92, 84, 112, 0.05);
+    --shadow-md: 0 10px 30px rgba(92, 84, 112, 0.1);
+
+    /* Transiciones */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration: 0.3s;
+}
+
+/* Modificador global para Tema Oscuro */
+.theme-dark {
+    --color-brand: #e2958f;
+    --color-surface: #2c2a35;
+    --color-surface-alt: #3b3946;
+    --color-text: #f4f0ec;
+    --color-text-muted: #b5b1c1;
+    --color-border: #4a4756;
+    --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Reseteo básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    transition: background var(--duration), color var(--duration);
+    overflow-x: hidden;
+}
+
+/* ========================================================
+   MÓDULO 02: ANIMACIONES KEYFRAMES
+======================================================== */
+@keyframes reveal-card {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) rotate(3deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Clases utilitarias (Max 0.8s de duración) */
+.animate-reveal-card {
+    animation: reveal-card 0.6s var(--ease-out) both;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Delays escalonados */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================================
+   MÓDULO 03: GLASSMORPHISM Y CAPAS
+======================================================== */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: var(--space-section);
+}
+
+.hero_bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    /* Mesh gradient pastel */
+    background: radial-gradient(at 0% 0%, #ffb7b2 0px, transparent 50%),
+                radial-gradient(at 100% 0%, #b2e2f2 0px, transparent 50%),
+                radial-gradient(at 100% 100%, #e2f0cb 0px, transparent 50%),
+                radial-gradient(at 0% 100%, #ffd1dc 0px, transparent 50%);
+    background-color: var(--color-surface);
+}
+
+.hero_orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.hero_orb--1 { width: 300px; height: 300px; background: #ffb7b2; top: 10%; left: 20%; }
+.hero_orb--2 { width: 400px; height: 400px; background: #b2e2f2; bottom: 10%; right: 10%; }
+.hero_orb--3 { width: 200px; height: 200px; background: #e2f0cb; top: 50%; left: 50%; }
+.hero_orb--4 { width: 150px; height: 150px; background: #ffd1dc; bottom: 20%; left: 30%; }
+
+.glass-card {
+    position: relative;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.3); /* Transparencia para contraste pastel */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(92, 84, 112, 0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+    padding: var(--space-2xl);
+    text-align: center;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theme-dark .glass-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos para el nuevo icono de Avatar (Actualizado) */
+.about_avatar-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: var(--space-lg);
+    border: 3px solid var(--color-surface);
+    background-color: var(--color-surface-alt); /* Fondo pastel suave para el icono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted); /* Color del trazo del icono */
+    box-shadow: var(--shadow-sm);
+}
+
+.about_avatar-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.glass-card_title { font-size: 2.5rem; margin-bottom: var(--space-sm); }
+.glass-card_text { font-size: 1.1rem; color: var(--color-text); line-height: 1.4; }
+
+/* ========================================================
+   DISEÑO BASE DE TARJETAS (MÓDULOS 1 Y 2)
+======================================================== */
+.projects-section {
+    padding: var(--space-section) 5%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+    font-size: 2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--duration) var(--ease-out), box-shadow var(--duration) var(--ease-out);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
+}
+
+.card_image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+}
+
+.card_body { padding: var(--space-lg); }
+.card_title { font-size: 1.25rem; margin-bottom: var(--space-sm); }
+.card_description { color: var(--color-text-muted); margin-bottom: var(--space-xl); line-height: 1.6; }
+
+.card_tag {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface-alt);
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    color: var(--color-text);
+    margin-right: 5px;
+}
+
+.btn {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-brand);
+    color: #fff;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none; /* Por si se usa una etiqueta 'a' */
+}
+
+/* ========================================================
+   MÓDULO 04: EL TRUCO DEL CHECKBOX (Sin JavaScript)
+======================================================== */
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); border: 0;
+}
+
+/* --- SIDEBAR --- */
+.menu-btn {
+    position: fixed; top: var(--space-lg); left: var(--space-lg);
+    z-index: 200; cursor: pointer; display: flex; flex-direction: column; gap: 6px;
+    background: var(--color-surface); padding: 10px; border-radius: 50%; box-shadow: var(--shadow-sm);
+}
+
+.menu-btn_line {
+    display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px;
+    transition: transform var(--duration) var(--ease-out), opacity var(--duration) var(--ease-out);
+}
+
+/* Animación Hamburguesa a X */
+#sidebar-toggle:checked ~ .menu-btn .menu-btn_line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+#sidebar-toggle:checked ~ .menu-btn .menu-btn_line:nth-child(2) { opacity: 0; }
+#sidebar-toggle:checked ~ .menu-btn .menu-btn_line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.sidebar-overlay {
+    position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0);
+    visibility: hidden; transition: background var(--duration), visibility var(--duration); cursor: pointer;
+}
+
+#sidebar-toggle:checked ~ .sidebar-overlay {
+    background: rgba(92, 84, 112, 0.4); /* Overlay pastel oscuro */
+    visibility: visible;
+}
+
+.sidebar {
+    position: fixed; top: 0; left: 0; height: 100vh; width: 280px; z-index: 100;
+    background: var(--color-surface); box-shadow: var(--shadow-md);
+    padding: 100px var(--space-xl) var(--space-xl);
+    transform: translateX(-100%);
+    transition: transform 0.4s var(--ease-out);
+}
+
+#sidebar-toggle:checked ~ .sidebar { transform: translateX(0); }
+
+.sidebar_nav { list-style: none; }
+.sidebar_nav li { margin-bottom: var(--space-lg); }
+.sidebar_nav a { text-decoration: none; color: var(--color-text); font-size: 1.2rem; font-weight: bold; }
+.sidebar_note { margin-top: 2rem; font-size: 0.85rem; color: var(--color-text-muted); }
+
+/* --- MODALES --- */
+.modal-overlay {
+    position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0);
+    backdrop-filter: blur(0); visibility: hidden; cursor: pointer;
+    transition: all 0.35s ease;
+}
+
+input[id^="modal-"]:checked + .modal-overlay {
+    background: rgba(92, 84, 112, 0.5); backdrop-filter: blur(4px); visibility: visible;
+}
+
+.modal {
+    position: fixed; z-index: 400; background: var(--color-surface);
+    padding: var(--space-2xl); box-shadow: var(--shadow-md);
+    visibility: hidden; transition: all 0.35s var(--ease-out);
+}
+
+/* Animación de entrada Bottom-Sheet para Móvil (Reto Módulo 04) */
+@media (max-width: 767px) {
+    .modal {
+        bottom: 0; left: 0; width: 100%; border-radius: 20px 20px 0 0;
+        transform: translateY(100%); opacity: 0;
+    }
+    input[id^="modal-"]:checked + .modal-overlay + .modal {
+        transform: translateY(0); opacity: 1; visibility: visible;
+    }
+}
+
+/* Desktop: Centrado normal */
+@media (min-width: 768px) {
+    .modal {
+        top: 50%; left: 50%; width: min(560px, 90vw); border-radius: var(--radius-lg);
+        transform: translate(-50%, -50%) scale(0.9); opacity: 0;
+    }
+    input[id^="modal-"]:checked + .modal-overlay + .modal {
+        transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible;
+    }
+}
+
+.modal_close {
+    position: absolute; top: var(--space-md); right: var(--space-lg);
+    cursor: pointer; font-size: 1.5rem; color: var(--color-text-muted);
+    transition: color var(--duration), transform var(--duration);
+}
+
+.modal_close:hover {
+    color: var(--color-brand); transform: rotate(90deg);
+}
+
+.modal_title { margin-bottom: var(--space-md); font-size: 1.5rem; }
+.modal_description { color: var(--color-text-muted); margin-bottom: var(--space-lg); line-height: 1.6; }
+.modal_tags { margin-top: var(--space-md); }

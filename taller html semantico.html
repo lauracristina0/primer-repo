@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftDev Learning | Portal Estudiantil</title>
+    <link rel="stylesheet" href="taller html semantico.css"> 
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/1055/1055666.png" alt="Logo de Desarrollo" class="logo">
+            <span class="brand-name">SoftDev <strong>Learning</strong></span>
+        </div>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#noticias">Noticias</a>
+            <a href="#eventos">Eventos</a>
+            <a href="#contactanos">Contáctanos</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero-section">
+            <h1>Desarrollo de Software Moderno</h1>
+            <p>Construyendo el futuro con código limpio y <em>HTML Semántico</em>.</p>
+        </section>
+
+        <section id="noticias" class="content-section">
+            <h2>Últimas Noticias</h2>
+            <div class="cards-container">
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" alt="Código en pantalla">
+                    <h3>Integración de APIs en 2026</h3>
+                    <p>Las nuevas tendencias marcan que conectar sistemas es <strong>fundamental</strong> para crear ecosistemas robustos.</p>
+                </article>
+
+                <article class="card">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Teclado y monitor">
+                    <h3>Machine Learning Aplicado</h3>
+                    <p>Algoritmos de clasificación supervisada están cambiando la forma en que analizamos datos a diario.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="eventos" class="content-section">
+            <h2>Próximos Eventos</h2>
+            <ul class="event-list">
+                <li>Taller de JavaScript Avanzado - 15 de Mayo</li>
+                <li>Seminario sobre Estructuras de Datos - 22 de Mayo</li>
+                <li>Feria de Proyectos de Desarrollo - 10 de Junio</li>
+            </ul>
+        </section>
+
+        <section id="contactanos" class="content-section contact-box">
+            <h2>Contáctanos</h2>
+            <p>¿Tienes dudas sobre los proyectos? Envíanos tus inquietudes a través del siguiente formulario.</p>
+            
+            <form action="#" method="POST" class="contact-form">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre completo:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" name="email" required placeholder="tu@correo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="mensaje">Tu mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" rows="4" required placeholder="¿En qué te podemos ayudar?"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Enviar Mensaje</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>Proyecto desarrollado por: <strong>Laura Cristina</strong></p>
+        <p>Programa: Análisis y Desarrollo de Software</p>
+        <p>Línea de atención al ciudadano: 018000 910270 | Línea de atención al empresario: 018000 910682</p>
+    </footer>
+
+</body>
+</html>
