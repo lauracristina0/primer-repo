@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Finanzas Personales</title>
+    <style>
+        /* Estilos generales con gradientes y tonos pasteles difuminados */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4a4a4a;
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 1px 2px 4px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Tarjetas elegantes y estructuradas */
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            backdrop-filter: blur(8px);
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+            color: #6b7280;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            background-color: #f9fafb;
+        }
+
+        input:focus {
+            border-color: #a6c1ee;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        /* Botones con degradados suaves */
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #btn-calcular {
+            background: linear-gradient(to right, #84fab0 0%, #8fd3f4 100%);
+            color: #0b4d2c;
+        }
+
+        #btn-reset {
+            background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+            color: #6b2d1a;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Panel de resultados dinámico */
+        #panel-resultado {
+            display: none; /* Oculto al inicio */
+            text-align: center;
+        }
+
+        #saldo-display {
+            font-size: 46px;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        #estado-texto {
+            font-size: 22px;
+            margin: 0;
+        }
+
+        #consejo-texto {
+            font-size: 15px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        #ahorro-display {
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #4b5563;
+            border-left: 4px solid #a6c1ee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h1>Mi Simulador de Finanzas</h1>
+
+    <div class="card">
+        <label>Ingreso mensual ($)</label>
+        <input id="inp-ingreso" type="number" placeholder="Ej: 2000">
+
+        <label>Gastos mensuales ($)</label>
+        <input id="inp-gasto" type="number" placeholder="Ej: 1200">
+
+        <button id="btn-calcular">Calcular mi saldo</button>
+        <button id="btn-reset">Resetear valores</button>
+    </div>
+
+    <div class="card" id="panel-resultado">
+        <p id="estado-texto"></p>
+        <div id="saldo-display"></div>
+        <p id="consejo-texto"></p>
+        <div id="ahorro-display"></div>
+    </div>
+</div>
+
+<script>
+    // 1. Constantes y funciones puras
+    const META_INVERSION = 2000;
+    const META_AHORRO = 500;
+
+    function calcularSaldo(ingreso, gasto) {
+        return ingreso - gasto;
+    }
+
+    // 2. Lógica del Semáforo Financiero ampliada
+    function obtenerEstado(saldo) {
+        // Cuarta condición: Inversión (Bonus Módulo 2)
+        if (saldo > META_INVERSION) {
+            return { emoji: '🚀', msg: '¡Modo inversión activado!', color: '#2b6cb0', consejo: 'Tienes un capital fuerte. Es momento de diversificar.' };
+        }
+        if (saldo > META_AHORRO) {
+            return { emoji: '🎉', msg: 'Excelente salud', color: '#059669', consejo: 'Vas muy bien. Mantén ese ritmo.' };
+        }
+        if (saldo > 0) {
+            return { emoji: '⚠️', msg: 'Cuidado, ajustado', color: '#d97706', consejo: 'Revisa qué gastos puedes reducir.' };
+        }
+        return { emoji: '🚨', msg: 'Gastos exceden ingresos', color: '#dc2626', consejo: 'Urgente: reduce gastos o busca ingresos extra.' };
+    }
+
+    // 3. Eventos y manipulación del DOM
+    document.getElementById('btn-calcular').addEventListener('click', function () {
+        // Leer y convertir valores asegurando que sean números reales
+        const ingreso = Number(document.getElementById('inp-ingreso').value);
+        const gasto = Number(document.getElementById('inp-gasto').value);
+
+        // Validación básica
+        if (ingreso === 0 && gasto === 0) {
+            alert('Por favor ingresa al menos un valor válido.');
+            return;
+        }
+
+        // Ejecutar funciones de cálculo
+        const saldo = calcularSaldo(ingreso, gasto);
+        const estado = obtenerEstado(saldo);
+        const ahorroRecomendado = ingreso * 0.10; // Bonus Módulo 1: Variable ahorro
+
+        // Actualizar el DOM con la información calculada
+        const panel = document.getElementById('panel-resultado');
+        panel.style.display = 'block';
+
+        document.getElementById('saldo-display').innerHTML = '$' + saldo;
+        document.getElementById('saldo-display').style.color = estado.color;
+        
+        document.getElementById('estado-texto').innerHTML = estado.emoji + ' ' + estado.msg;
+        document.getElementById('estado-texto').style.color = estado.color;
+        
+        document.getElementById('consejo-texto').innerHTML = estado.consejo;
+        
+        // Mostrar la recomendación del 10% de ahorro
+        document.getElementById('ahorro-display').innerHTML = '💡 <strong>Sugerencia:</strong> Intenta separar <strong>$' + ahorroRecomendado + '</strong> (' + '10% de tus ingresos) para un fondo de ahorro.';
+    });
+
+    // Bonus Módulo 3: Evento para el botón Resetear
+    document.getElementById('btn-reset').addEventListener('click', function() {
+        document.getElementById('inp-ingreso').value = '';
+        document.getElementById('inp-gasto').value = '';
+        document.getElementById('panel-resultado').style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
