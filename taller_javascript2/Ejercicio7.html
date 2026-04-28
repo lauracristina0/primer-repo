@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>07 - Termómetro de Colores</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #F5F3FF 0%, #E0E7FF 100%);
+            transition: background 0.5s;
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 22px; width: 150px; border: 2px solid #ccc; border-radius: 10px; text-align: center; }
+        button { padding: 14px 24px; font-size: 16px; margin-left: 8px; border: none; border-radius: 10px; cursor: pointer; background: #333; color: white; font-weight: bold; }
+        #resultado-clima { font-size: 32px; font-weight: bold; margin-top: 28px; }
+    </style>
+</head>
+<body id="bg-clima">
+    <div class="card">
+        <h3>07. Termómetro</h3>
+        <h2>¿Cómo está el clima hoy?</h2>
+        <input id="inp-temp" type="number" placeholder="°C">
+        <button onclick="evaluarClima()">Evaluar</button>
+        <div id="resultado-clima"></div>
+    </div>
+
+    <script>
+        function evaluarClima() {
+            const temp = Number(document.getElementById("inp-temp").value);
+            const resultado = document.getElementById("resultado-clima");
+            const fondo = document.getElementById("bg-clima");
+
+            if (temp > 35) {
+                resultado.innerHTML = "Calor extremo: " + temp + "°C";
+                resultado.style.color = "#DC2626";
+                fondo.style.background = "linear-gradient(135deg, #FEF2F2 0%, #FADBD8 100%)";
+            } else if (temp > 25) {
+                resultado.innerHTML = "Calor: " + temp + "°C";
+                resultado.style.color = "#EA580C";
+                fondo.style.background = "linear-gradient(135deg, #FFF7ED 0%, #FDEBD0 100%)";
+            } else if (temp > 15) {
+                resultado.innerHTML = "Templado: " + temp + "°C";
+                resultado.style.color = "#16A34A";
+                fondo.style.background = "linear-gradient(135deg, #F0FDF4 0%, #D5F5E3 100%)";
+            } else if (temp > 0) {
+                resultado.innerHTML = "Frío: " + temp + "°C";
+                resultado.style.color = "#2563EB";
+                fondo.style.background = "linear-gradient(135deg, #EFF6FF 0%, #D6EAF8 100%)";
+            } else {
+                resultado.innerHTML = "Bajo cero: " + temp + "°C";
+                resultado.style.color = "#7C3AED";
+                fondo.style.background = "linear-gradient(135deg, #F5F3FF 0%, #E8DAEF 100%)";
+            }
+        }
+    </script>
+</body>
+</html>

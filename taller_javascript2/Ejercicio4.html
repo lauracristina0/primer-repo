@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>04 - Edad Canina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #FDF2E9 0%, #F5CBA7 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 20px; width: 150px; border: 2px solid #ddd; border-radius: 10px; text-align: center; }
+        button { padding: 14px 24px; font-size: 16px; margin-left: 10px; border: none; border-radius: 10px; cursor: pointer; background: #EA580C; color: white; font-weight: bold; }
+        #resultado { font-size: 28px; margin-top: 24px; font-weight: bold; color: #78281F; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>04. Calculadora Canina</h3>
+        <h2>¿Cuántos años tienes en años perro?</h2>
+        <input id="edad-humana" type="number" placeholder="Tu edad" min="1">
+        <button onclick="calcularEdadCanina()">Calcular</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        const FACTOR_CANINO = 7;
+        function calcularEdadCanina() {
+            const valorTexto = document.getElementById("edad-humana").value;
+            const edadHumana = Number(valorTexto);
+            
+            if (edadHumana === 0 || valorTexto === "") {
+                document.getElementById("resultado").innerHTML = "⚠️ Escribe tu edad";
+                return;
+            }
+            
+            const edadCanina = edadHumana * FACTOR_CANINO;
+            document.getElementById("resultado").innerHTML = "En años perro tienes: " + edadCanina + " años 🐶";
+        }
+    </script>
+</body>
+</html>

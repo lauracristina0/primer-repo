@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>01 - Cambiador de Ánimo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #AED6F1 0%, #D6EAF8 100%);
+            transition: background 0.5s;
+        }
+        .card { background: rgba(255,255,255,0.6); padding: 50px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        button { padding: 12px 24px; font-size: 16px; border: none; border-radius: 12px; cursor: pointer; background: white; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        #emoji { font-size: 100px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>01. Cambiador de Ánimo</h3>
+        <div id="emoji">😐</div>
+        <p id="mensaje">Hoy no es mi mejor día...</p>
+        <button onclick="cambiarAnimo()">¡Anímame!</button>
+    </div>
+
+    <script>
+        let estaFeliz = false;
+        function cambiarAnimo() {
+            const emojiDiv = document.getElementById("emoji");
+            const mensajeP = document.getElementById("mensaje");
+            
+            if (estaFeliz === false) {
+                document.body.style.background = "linear-gradient(135deg, #F9E79F 0%, #FEF9E7 100%)";
+                emojiDiv.innerHTML = "😊";
+                mensajeP.innerHTML = "¡Hoy va a ser un gran día!";
+                estaFeliz = true;
+            } else {
+                document.body.style.background = "linear-gradient(135deg, #AED6F1 0%, #D6EAF8 100%)";
+                emojiDiv.innerHTML = "😐";
+                mensajeP.innerHTML = "Hoy no es mi mejor día...";
+                estaFeliz = false;
+            }
+        }
+    </script>
+</body>
+</html>

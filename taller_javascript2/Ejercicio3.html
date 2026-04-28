@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>03 - Interruptor de Luz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #FFF 0%, #F4F6F7 100%);
+            transition: background 0.4s, color 0.4s;
+            color: #111827;
+        }
+        .card { background: rgba(150,150,150,0.1); padding: 50px; border-radius: 20px; backdrop-filter: blur(10px); }
+        button { padding: 12px 24px; font-size: 16px; margin-top: 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; color: black; }
+    </style>
+</head>
+<body id="sala">
+    <div class="card">
+        <h3>03. Interruptor</h3>
+        <h2 id="estado-texto">Luz Encendida</h2>
+        <div id="bombillo" style="font-size:100px">💡</div>
+        <button id="btn-luz" onclick="toggleLuz()">Apagar</button>
+    </div>
+
+    <script>
+        let luzEncendida = true;
+        function toggleLuz() {
+            const sala = document.getElementById("sala");
+            const texto = document.getElementById("estado-texto");
+            const bombillo = document.getElementById("bombillo");
+            const boton = document.getElementById("btn-luz");
+
+            if (luzEncendida) {
+                sala.style.background = "linear-gradient(135deg, #111827 0%, #2C3E50 100%)";
+                sala.style.color = "#FFFFFF";
+                texto.innerHTML = "Luz Apagada";
+                bombillo.innerHTML = "🌑";
+                boton.innerHTML = "Encender";
+                luzEncendida = false;
+            } else {
+                sala.style.background = "linear-gradient(135deg, #FFF 0%, #F4F6F7 100%)";
+                sala.style.color = "#111827";
+                texto.innerHTML = "Luz Encendida";
+                bombillo.innerHTML = "💡";
+                boton.innerHTML = "Apagar";
+                luzEncendida = true;
+            }
+        }
+    </script>
+</body>
+</html>

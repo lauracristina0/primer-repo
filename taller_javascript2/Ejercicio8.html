@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>08 - Generador de Notas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #E8F6F3 0%, #A2D9CE 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 16px; width: calc(100% - 30px); border: 2px solid #ccc; border-radius: 8px; margin-bottom: 15px; }
+        button { padding: 12px 20px; font-size: 14px; margin: 4px; border: none; border-radius: 8px; cursor: pointer; background: #0D9488; color: white; font-weight: bold; }
+        #libreta { margin-top: 24px; text-align: left; }
+        .nota { background: #F0FDFA; border-left: 4px solid #0D9488; padding: 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>08. Generador de Notas</h3>
+        <input id="inp-texto" type="text" placeholder="Escribe una nota...">
+        <div>
+            <button onclick="agregarNota()">Agregar nota +</button>
+            <button onclick="borrarTodo()" style="background: #E53E3E;">Borrar todo</button>
+        </div>
+        <div id="libreta"></div>
+    </div>
+
+    <script>
+        let contadorNotas = 0;
+        function agregarNota() {
+            const texto = document.getElementById("inp-texto").value;
+            if (texto === "") {
+                alert("Escribe algo antes de agregar la nota");
+                return;
+            }
+            contadorNotas = contadorNotas + 1;
+            const nuevaNota = '<div class="nota"><strong>Nota #' + contadorNotas + ':</strong> ' + texto + '</div>';
+            
+            document.getElementById("libreta").innerHTML += nuevaNota;
+            document.getElementById("inp-texto").value = "";
+        }
+        function borrarTodo() {
+            document.getElementById("libreta").innerHTML = "";
+            contadorNotas = 0;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>05 - Validador de Invitados</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #EBF5FB 0%, #AED6F1 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 18px; width: 220px; border: 2px solid #ccc; border-radius: 10px; text-align: center;}
+        button { padding: 14px 24px; font-size: 16px; margin-left: 8px; border: none; border-radius: 10px; cursor: pointer; background: #16A34A; color: white; font-weight: bold; }
+        #mensaje-acceso { font-size: 24px; font-weight: bold; margin-top: 28px; padding: 15px; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>05. Validador de Invitados</h3>
+        <h2>Control de Acceso</h2>
+        <input id="inp-nombre" type="text" placeholder="Escribe 'Admin'">
+        <button onclick="validarAcceso()">Verificar</button>
+        <div id="mensaje-acceso"></div>
+    </div>
+
+    <script>
+        const NOMBRE_PERMITIDO = "Admin";
+        function validarAcceso() {
+            const nombreEscrito = document.getElementById("inp-nombre").value;
+            const mensajeDiv = document.getElementById("mensaje-acceso");
+            
+            if (nombreEscrito === NOMBRE_PERMITIDO) {
+                mensajeDiv.innerHTML = "¡Bienvenido, " + nombreEscrito + "!";
+                mensajeDiv.style.background = "#F0FDF4";
+                mensajeDiv.style.color = "#16A34A";
+                mensajeDiv.style.border = "2px solid #16A34A";
+            } else {
+                mensajeDiv.innerHTML = "Acceso Denegado ⛔";
+                mensajeDiv.style.background = "#FEF2F2";
+                mensajeDiv.style.color = "#DC2626";
+                mensajeDiv.style.border = "2px solid #DC2626";
+            }
+        }
+    </script>
+</body>
+</html>

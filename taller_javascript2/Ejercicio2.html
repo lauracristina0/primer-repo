@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>02 - Sumador de Puntos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #E8F8F5 0%, #A3E4D7 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        h1 { font-size: 120px; color: #2563EB; margin: 0; }
+        button { padding: 12px 24px; font-size: 16px; margin: 8px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>02. Sumador de Puntos</h3>
+        <h1 id="marcador">0</h1>
+        <p>puntos acumulados</p>
+        <button onclick="sumarPunto()" style="background: #2563EB; color: white;">+1 Punto</button>
+        <button onclick="reiniciar()">Reiniciar</button>
+    </div>
+
+    <script>
+        let puntaje = 0;
+        function sumarPunto() {
+            puntaje = puntaje + 1;
+            document.getElementById("marcador").innerHTML = puntaje;
+            if (puntaje === 10) {
+                document.getElementById("marcador").style.color = "#16A34A";
+                alert("¡Alcanzaste 10 puntos!");
+            }
+        }
+        function reiniciar() {
+            puntaje = 0;
+            const marcador = document.getElementById("marcador");
+            marcador.innerHTML = 0;
+            marcador.style.color = "#2563EB";
+        }
+    </script>
+</body>
+</html>

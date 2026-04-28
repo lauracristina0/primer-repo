@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>10 - Escondite Mágico</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #FDEDEC 0%, #F5B7B1 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); width: 400px; }
+        button { padding: 12px 20px; font-size: 16px; margin: 6px; border: none; border-radius: 12px; cursor: pointer; background: white; color: #555; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        #objeto-magico { font-size: 100px; text-align: center; margin: 30px; min-height: 120px; }
+        #estado-msg { font-size: 20px; font-weight: bold; color: #C0392B; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>10. Escondite Mágico</h3>
+        <h2>¡Ahora lo ves, ahora no lo ves!</h2>
+        
+        <div id="objeto-magico">
+            <img src="https://cdn-icons-png.flaticon.com/512/2663/2663067.png" width="120" alt="Conejo Mágico">
+        </div>
+        
+        <div>
+            <button onclick="esconder()">Esconder</button>
+            <button onclick="mostrar()">Mostrar</button>
+            <button onclick="alternar()" style="background: #E74C3C; color: white;">Alternar</button>
+        </div>
+        <p id="estado-msg">¡Apareció!</p>
+    </div>
+
+    <script>
+        let estaVisible = true;
+        
+        function esconder() {
+            document.getElementById("objeto-magico").style.display = "none";
+            document.getElementById("estado-msg").innerHTML = "¡Desapareció! 💨";
+            estaVisible = false;
+        }
+        
+        function mostrar() {
+            document.getElementById("objeto-magico").style.display = "block";
+            document.getElementById("estado-msg").innerHTML = "¡Apareció! ✨";
+            estaVisible = true;
+        }
+        
+        function alternar() {
+            if (estaVisible) {
+                esconder();
+            } else {
+                mostrar();
+            }
+        }
+    </script>
+</body>
+</html>

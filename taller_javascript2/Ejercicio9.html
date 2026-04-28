@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>09 - Calculadora de IVA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #EEF2FF 0%, #C7D2FE 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; width: 350px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 18px; width: 200px; border: 2px solid #ccc; border-radius: 10px; text-align: center; margin-bottom: 15px;}
+        button { padding: 12px 24px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; background: #4338CA; color: white; font-weight: bold; width: 100%; }
+        #desglose { margin-top: 20px; text-align: left; }
+        .linea { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #E5E7EB; font-size: 16px; }
+        .total { font-weight: bold; font-size: 20px; color: #4338CA; border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>09. Calculadora de Precios</h3>
+        <label style="font-weight: bold; color: #555;">Precio base ($):</label><br><br>
+        <input id="inp-precio" type="number" placeholder="Ej: 50000" min="0">
+        <button onclick="calcularConIVA()">Calcular con IVA 19%</button>
+        <div id="desglose"></div>
+    </div>
+
+    <script>
+        const TASA_IVA = 0.19;
+        function calcularConIVA() {
+            const precioBase = Number(document.getElementById("inp-precio").value);
+            if (precioBase <= 0) {
+                alert("Por favor ingresa un precio mayor a 0");
+                return;
+            }
+            const valorIVA = precioBase * TASA_IVA;
+            const precioTotal = precioBase + valorIVA;
+            
+            const baseFormateada = precioBase.toFixed(2);
+            const ivaFormateado = valorIVA.toFixed(2);
+            const totalFormateado = precioTotal.toFixed(2);
+            
+            document.getElementById("desglose").innerHTML = 
+                '<div class="linea"><span>Precio base:</span><span>$' + baseFormateada + '</span></div>' +
+                '<div class="linea"><span>IVA (19%):</span><span>$' + ivaFormateado + '</span></div>' +
+                '<div class="linea total"><span>TOTAL:</span><span>$' + totalFormateado + '</span></div>';
+        }
+    </script>
+</body>
+</html>

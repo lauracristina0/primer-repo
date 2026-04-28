@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>06 - Adivina el Número</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center; margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #F5EEF8 0%, #D7BDE2 100%);
+        }
+        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        input { padding: 12px; font-size: 24px; width: 100px; border: 2px solid #ccc; border-radius: 10px; text-align: center; }
+        button { padding: 14px 24px; font-size: 16px; margin-left: 8px; border: none; border-radius: 10px; cursor: pointer; background: #7C3AED; color: white; font-weight: bold; }
+        #feedback { font-size: 24px; margin-top: 28px; font-weight: bold; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>06. Adivina el Número</h3>
+        <h2>Del 1 al 10</h2>
+        <input id="inp-numero" type="number" min="1" max="10" placeholder="?">
+        <button onclick="adivinar()">¡Adivinar!</button>
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        const NUMERO_SECRETO = 7;
+        function adivinar() {
+            const intento = Number(document.getElementById("inp-numero").value);
+            const feedback = document.getElementById("feedback");
+            
+            if (intento === NUMERO_SECRETO) {
+                feedback.innerHTML = "¡¡CORRECTO!! ¡Adivinaste!";
+                feedback.style.color = "#7C3AED";
+                feedback.style.fontSize = "35px";
+            } else if (intento < NUMERO_SECRETO) {
+                feedback.innerHTML = "¡Más caliente! El número es mayor 🔥";
+                feedback.style.color = "#2563EB";
+                feedback.style.fontSize = "24px";
+            } else {
+                feedback.innerHTML = "¡Más frío! El número es menor 🧊";
+                feedback.style.color = "#DC2626";
+                feedback.style.fontSize = "24px";
+            }
+        }
+    </script>
+</body>
+</html>
