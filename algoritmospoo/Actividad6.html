@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos y Binding - POO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
+        }
+        .panel {
+            background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 500px;
+        }
+        h2, h3 { color: #4a148c; margin-top: 0; text-align: center; }
+        .cont-clics { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .num-clics { font-size: 70px; font-weight: bold; color: #b794f4; line-height: 1; }
+        .botones { display: flex; gap: 10px; width: 100%; justify-content: center; }
+        button {
+            padding: 12px 25px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        #btn-click { background: #b5ead7; color: #1b4332; flex: 2; }
+        #btn-reset { background: #ffdac1; color: #7d2200; flex: 1; }
+        .tecla { background: #e2ebf0; padding: 4px 8px; border-radius: 6px; font-family: monospace; color: #4a4a4a; }
+        .historial-item {
+            background: #faf5ff; padding: 10px 15px; border-radius: 10px; margin-bottom: 8px;
+            font-size: 14px; display: flex; justify-content: space-between; color: #555;
+            border-left: 4px solid #b794f4;
+        }
+        .record-box { background: #fff0f3; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 2px dashed #ffb7b2; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>Entrenamiento de Clics</h2>
+    
+    <div class="record-box">
+        <strong>🏆 Récord en 5 segundos:</strong> <span id="record-display">0</span> clics
+        <div style="font-size: 12px; color: #888; margin-top: 5px;">El temporizador inicia con el primer clic.</div>
+    </div>
+
+    <div class="cont-clics">
+        <div class="num-clics" id="num-clics">0</div>
+        <div class="botones">
+            <button id="btn-click">¡Haz clic!</button>
+            <button id="btn-reset">Resetear</button>
+        </div>
+        <p style="font-size: 14px; color: #888; text-align: center; margin: 0;">
+            O presiona la tecla <span class="tecla">Espacio</span> o <span class="tecla">Enter</span>
+        </p>
+    </div>
+
+    <h3>Historial Reciente</h3>
+    <div id="historial"></div>
+</div>
+
+<script>
+    class Contador {
+        constructor(idElemento) {
+            this.clics = 0;
+            this.historial = [];
+            this.elementold = idElemento;
+            
+            // Reto Bonus: Variables para el récord de 5 segundos
+            this.record = 0;
+            this.tiempoActivo = false;
+            this.clicsEnRonda = 0;
+
+            this.iniciarEventos();
+        }
+
+        iniciarEventos() {
+            // Arrow function anónima para mantener el "this" de la clase
+            const btn = document.getElementById("btn-click");
+            btn.addEventListener("click", () => this.manejarClic("Clic en botón"));
+
+            // Reto: Botón Resetear
+            const btnReset = document.getElementById("btn-reset");
+            btnReset.addEventListener("click", () => this.resetear());
+
+            // bind(this) para fijar el contexto al usar eventos del document
+            document.addEventListener("keydown", this.manejarTecla.bind(this));
+        }
+
+        manejarClic(fuente) {
+            this.clics++;
+            const hora = new Date().toLocaleTimeString();
+            this.historial.unshift({ fuente, hora, num: this.clics });
+
+            if (this.historial.length > 5) this.historial.pop(); // Mantener solo 5
+
+            this.gestionarRecord();
+            this.render();
+        }
+
+        // Reto: Soporte para la tecla Enter y Espacio
+        manejarTecla(event) {
+            if (event.code === "Space" || event.code === "Enter") {
+                event.preventDefault(); // Evitar scroll de la página
+                this.manejarClic(`Tecla ${event.code}`);
+            }
+        }
+
+        resetear() {
+            this.clics = 0;
+            this.historial = [];
+            this.tiempoActivo = false;
+            this.clicsEnRonda = 0;
+            this.render();
+        }
+
+        gestionarRecord() {
+            if (!this.tiempoActivo) {
+                this.tiempoActivo = true;
+                this.clicsEnRonda = 0;
+                
+                // Temporizador de 5 segundos
+                setTimeout(() => {
+                    if (this.clicsEnRonda > this.record) {
+                        this.record = this.clicsEnRonda;
+                        document.getElementById("record-display").innerText = this.record;
+                    }
+                    this.tiempoActivo = false;
+                }, 5000);
+            }
+            this.clicsEnRonda++;
+        }
+
+        render() {
+            document.getElementById(this.elementold).innerText = this.clics;
+            const cont = document.getElementById("historial");
+            cont.innerHTML = "";
+            this.historial.forEach(h => {
+                cont.innerHTML += `
+                    <div class="historial-item">
+                        <span><strong>#${h.num}</strong> - ${h.fuente}</span>
+                        <span>${h.hora}</span>
+                    </div>`;
+            });
+        }
+    }
+
+    const contador = new Contador("num-clics");
+</script>
+</body>
+</html>

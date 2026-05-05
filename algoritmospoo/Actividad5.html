@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito de Compras - POO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif; background: #fffdf0; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .panel {
+            background: white; border-radius: 14px; padding: 25px; width: 100%; max-width: 700px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px;
+        }
+        .titulo { color: #d4830a; border-bottom: 2px solid #fcf3cf; padding-bottom: 10px; margin-top: 0; }
+        .catalogo { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .prod-btn {
+            background: #fcf3cf; border: 2px solid #f9e79f; border-radius: 12px; padding: 15px 10px;
+            text-align: center; cursor: pointer; transition: transform 0.2s; position: relative;
+        }
+        .prod-btn:hover:not(.agotado) { transform: translateY(-5px); box-shadow: 0 5px 10px rgba(212,131,10,0.2); }
+        .prod-btn.agotado { background: #f2f3f4; border-color: #d5d8dc; cursor: not-allowed; opacity: 0.6; }
+        .stock-badge {
+            position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white;
+            font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold;
+        }
+        .precio { font-weight: bold; color: #d4830a; font-size: 18px; margin-top: 5px; }
+        .item-carrito {
+            display: flex; justify-content: space-between; align-items: center; background: #fff8e1;
+            padding: 12px 15px; border-radius: 10px; margin-bottom: 8px;
+        }
+        .btn-quitar { background: #fadadd; border: none; color: #7d2200; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .total-box { background: #f9e79f; padding: 15px; border-radius: 10px; text-align: center; font-size: 22px; font-weight: bold; color: #7d2200; margin-top: 15px; }
+        .acciones-carrito { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-general { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; }
+        .btn-vaciar { background: #fadadd; color: #7d2200; }
+        .btn-descuento { background: #a8e6cf; color: #1b4332; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2 class="titulo">🛍️ Catálogo de Productos</h2>
+    <div class="catalogo" id="catalogo"></div>
+</div>
+
+<div class="panel">
+    <h2 class="titulo">🛒 Mi Carrito (<span id="cant-items">0</span> items)</h2>
+    <div id="lista-carrito"></div>
+    <div class="total-box" id="total-box">Total: $0.00</div>
+    
+    <div class="acciones-carrito">
+        <button class="btn-general btn-vaciar" onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
+        <!-- Reto 2: Botón de descuento -->
+        <button class="btn-general btn-descuento" onclick="aplicarDesc()">🎟️ Aplicar 10% Descuento</button>
+    </div>
+    <div id="msg-ahorro" style="text-align: center; margin-top: 10px; color: #1b4332; font-weight: bold;"></div>
+</div>
+
+<script>
+    class Producto {
+        // Reto 1: Propiedad stock agregada
+        constructor(nombre, precio, emoji, stock) {
+            this.nombre = nombre;
+            this.precio = precio;
+            this.emoji = emoji;
+            this.stock = stock; 
+        }
+    }
+
+    class Carrito {
+        constructor() {
+            this.items = [];
+            this.descuentoActivo = 0;
+        }
+
+        agregar(producto) {
+            if (producto.stock <= 0) return false;
+
+            let itemExistente = this.items.find(i => i.producto.nombre === producto.nombre);
+            
+            if (itemExistente) {
+                if (itemExistente.cantidad < producto.stock) {
+                    itemExistente.cantidad++;
+                } else {
+                    alert("No hay más stock disponible de este producto.");
+                    return false;
+                }
+            } else {
+                this.items.push({ producto, cantidad: 1 });
+            }
+            return true;
+        }
+
+        quitar(indice) {
+            if (this.items[indice].cantidad > 1) {
+                this.items[indice].cantidad--;
+            } else {
+                this.items.splice(indice, 1);
+            }
+            if(this.items.length === 0) this.descuentoActivo = 0; // Resetear descuento si se vacía
+        }
+
+        calcularSubtotal() {
+            return this.items.reduce((total, item) => total + (item.producto.precio * item.cantidad), 0);
+        }
+
+        // Reto 2: Aplicar descuento
+        aplicarDescuento(porcentaje) {
+            this.descuentoActivo = porcentaje;
+        }
+
+        calcularTotalFinal() {
+            const subtotal = this.calcularSubtotal();
+            return subtotal - (subtotal * (this.descuentoActivo / 100));
+        }
+
+        vaciar() {
+            this.items = [];
+            this.descuentoActivo = 0;
+        }
+    }
+
+    // Catálogo con datos integrados
+    const catalogo = [
+        new Producto("Bioaqua Skincare", 45000, "🧴", 5),
+        new Producto("Riot Points x1380", 35000, "🎮", 10),
+        new Producto("Teclado Minimalista", 120000, "⌨️", 3),
+        new Producto("Libro Alice Kellen", 55000, "📖", 0), // Este producto iniciará agotado
+        new Producto("Monitor 24'", 450000, "🖥️", 2),
+        new Producto("Mouse Inalámbrico", 25000, "🖱️", 8)
+    ];
+
+    const carrito = new Carrito();
+
+    const renderCatalogo = () => {
+        const cont = document.getElementById("catalogo");
+        cont.innerHTML = "";
+        catalogo.forEach((p, i) => {
+            const agotado = p.stock === 0;
+            const claseBtn = agotado ? "prod-btn agotado" : "prod-btn";
+            const accion = agotado ? "" : `onclick="agregar(${i})"`;
+            
+            cont.innerHTML += `
+                <div class="${claseBtn}" ${accion}>
+                    <div class="stock-badge">Stock: ${p.stock}</div>
+                    <div style="font-size: 35px;">${p.emoji}</div>
+                    <div style="margin-top: 10px; color: #4a0e0e;">${p.nombre}</div>
+                    <div class="precio">$${p.precio.toLocaleString()}</div>
+                </div>
+            `;
+        });
+    };
+
+    const renderCarrito = () => {
+        const lista = document.getElementById("lista-carrito");
+        lista.innerHTML = "";
+        
+        let totalItems = 0;
+        
+        carrito.items.forEach((it, i) => {
+            totalItems += it.cantidad;
+            const sub = it.producto.precio * it.cantidad;
+            lista.innerHTML += `
+                <div class="item-carrito">
+                    <span>${it.producto.emoji} ${it.producto.nombre} <strong>x${it.cantidad}</strong></span>
+                    <span style="font-weight:bold;">$${sub.toLocaleString()}</span>
+                    <button class="btn-quitar" onclick="quitarItem(${i})">-</button>
+                </div>
+            `;
+        });
+
+        document.getElementById("cant-items").innerText = totalItems;
+        
+        const subtotal = carrito.calcularSubtotal();
+        const total = carrito.calcularTotalFinal();
+        
+        document.getElementById("total-box").innerText = `Total: $${total.toLocaleString()}`;
+        
+        // Reto 3: Mostrar cuánto se ahorra
+        const msgAhorro = document.getElementById("msg-ahorro");
+        if (carrito.descuentoActivo > 0 && subtotal > 0) {
+            const ahorro = subtotal - total;
+            msgAhorro.innerText = `¡Estás ahorrando $${ahorro.toLocaleString()} con tu descuento del ${carrito.descuentoActivo}%!`;
+        } else {
+            msgAhorro.innerText = "";
+        }
+        
+        renderCatalogo(); // Re-renderizar catálogo por si el stock cambió visualmente
+    };
+
+    const agregar = (i) => {
+        if (carrito.agregar(catalogo[i])) {
+            catalogo[i].stock--; // Reducir stock localmente
+            renderCarrito();
+        }
+    };
+
+    const quitarItem = (i) => {
+        const productoDevuelto = carrito.items[i].producto;
+        productoDevuelto.stock++; // Devolver stock al catálogo
+        carrito.quitar(i);
+        renderCarrito();
+    };
+
+    const vaciarCarrito = () => {
+        // Devolver todo el stock
+        carrito.items.forEach(it => { it.producto.stock += it.cantidad; });
+        carrito.vaciar();
+        renderCarrito();
+    };
+
+    const aplicarDesc = () => {
+        if(carrito.items.length === 0) return alert("Agrega productos antes de aplicar un descuento.");
+        carrito.aplicarDescuento(10);
+        renderCarrito();
+    };
+
+    renderCatalogo();
+    renderCarrito();
+</script>
+</body>
+</html>

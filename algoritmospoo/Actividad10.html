@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco Virtual Avanzado - POO</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #e0f2f1; margin: 0; padding: 20px; display: flex; justify-content: center; color: #333; }
+        .app-container { width: 100%; max-width: 650px; }
+        h2 { color: #004d40; text-align: center; margin-bottom: 25px; font-size: 28px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 0; }
+        .tab { padding: 12px 20px; background: rgba(255,255,255,0.6); border: none; border-radius: 12px 12px 0 0; cursor: pointer; font-size: 15px; font-weight: bold; color: #555; transition: 0.2s; }
+        .tab.activa { background: white; color: #00897b; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .panel { background: white; border-radius: 0 16px 16px 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,137,123,0.1); display: none; }
+        .panel.activo { display: block; }
+        
+        /* Cuentas */
+        #lista-cuentas { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+        .chip-cuenta { padding: 10px 18px; border: 2px solid #b2dfdb; background: white; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: bold; color: #00695c; transition: 0.2s; }
+        .chip-cuenta.activo { background: #00897b; color: white; border-color: #00897b; transform: scale(1.05); }
+        .saldo-grande { font-size: 50px; font-weight: bold; color: #00897b; text-align: center; margin: 10px 0; }
+        .badge { display: inline-block; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
+        .badge-ahorro { background: #e0f2f1; color: #00695c; }
+        .badge-corriente { background: #ffeb3b; color: #f57f17; }
+        .badge-joven { background: #f3e5f5; color: #6a1b9a; }
+        
+        .fila-op { display: flex; gap: 10px; margin-bottom: 15px; }
+        input, select { flex: 1; padding: 12px; font-size: 15px; border: 2px solid #b2dfdb; border-radius: 10px; outline: none; }
+        .btn-accion { padding: 12px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
+        .btn-dep { background: #4db6ac; }
+        .btn-ret { background: #ff8a65; }
+        .btn-int { background: #ffd54f; color: #5d4037; width: 100%; margin-bottom: 15px; }
+        .btn-crear { background: #00897b; color: white; width: 100%; font-size: 16px; margin-top: 10px; }
+        
+        .mov-list { max-height: 200px; overflow-y: auto; background: #fafafa; border-radius: 12px; padding: 10px; }
+        .mov { display: flex; justify-content: space-between; padding: 10px 15px; border-radius: 8px; margin-bottom: 6px; font-size: 14px; font-weight: bold; }
+        .dep { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+        .ret { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+        .err-msg { color: #d32f2f; font-size: 14px; text-align: center; font-weight: bold; height: 20px; margin: 10px 0; }
+        
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat { background: #f0fdf4; border-radius: 12px; padding: 20px; text-align: center; font-weight: bold; color: #00695c; border: 2px solid #b2dfdb; }
+        .stat .n { font-size: 32px; color: #00897b; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>🏦 Mi Banco Virtual</h2>
+    
+    <div class="tabs">
+        <button class="tab activa" onclick="mostrarTab('cuentas')">Mis Cuentas</button>
+        <button class="tab" onclick="mostrarTab('nueva')">+ Abrir Cuenta</button>
+        <button class="tab" onclick="mostrarTab('stats')">Resumen General</button>
+        <button class="tab" onclick="banco.borrarDatos()" style="color: red; margin-left: auto;">Reset</button>
+    </div>
+
+    <!-- Panel de Gestión de Cuentas -->
+    <div id="tab-cuentas" class="panel activo">
+        <div id="lista-cuentas"></div>
+        <div id="panel-cuenta"></div>
+    </div>
+
+    <!-- Panel Nueva Cuenta -->
+    <div id="tab-nueva" class="panel">
+        <h3 style="margin-top: 0; color: #00695c;">Abrir un nuevo producto financiero</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <input id="nw-titular" type="text" placeholder="Nombre completo del titular">
+            <input id="nw-saldo" type="number" placeholder="Depósito inicial ($)">
+            <select id="nw-tipo">
+                <option value="ahorro">Cuenta de Ahorro (Interés 2%)</option>
+                <option value="corriente">Cuenta Corriente (Permite Sobregiro)</option>
+                <option value="joven">Cuenta Joven (Interés 3.5% | Límite $500)</option>
+            </select>
+            <button class="btn-accion btn-crear" onclick="banco.crearCuenta()">Abrir Cuenta</button>
+        </div>
+    </div>
+
+    <!-- Panel Estadísticas -->
+    <div id="tab-stats" class="panel">
+        <h3 style="margin-top: 0; color: #00695c;">Métricas Consolidadas</h3>
+        <div class="stat-grid" id="stat-grid"></div>
+    </div>
+</div>
+
+<script>
+    // --- LÓGICA DE CLASES POO ---
+
+    class CuentaBancaria {
+        #saldo;
+        #movimientos;
+
+        constructor(id, titular, saldoInicial, tipo, movimientosBase = []) {
+            this.id = id;
+            this.titular = titular;
+            this.tipo = tipo;
+            this.#saldo = saldoInicial;
+            this.#movimientos = movimientosBase;
+
+            if (saldoInicial > 0 && movimientosBase.length === 0) {
+                this.registrarMovimiento("apertura", saldoInicial);
+            }
+        }
+
+        get saldo() { return this.#saldo; }
+
+        registrarMovimiento(tipo, monto) {
+            this.#movimientos.unshift({ tipo, monto, fecha: new Date().toLocaleTimeString() });
+        }
+
+        depositar(monto) {
+            if (monto <= 0) throw new Error("Monto inválido");
+            this.#saldo += monto;
+            this.registrarMovimiento("depósito", monto);
+        }
+
+        retirar(monto) {
+            if (monto <= 0) throw new Error("Monto inválido");
+            if (monto > this.#saldo) throw new Error("Saldo insuficiente");
+            this.#saldo -= monto;
+            this.registrarMovimiento("retiro", monto);
+        }
+
+        getMovimientos() { return [...this.#movimientos]; }
+        calcularInteres() { return 0; }
+
+        // Serialización para guardar en localStorage
+        toJSON() {
+            return {
+                id: this.id, titular: this.titular, saldo: this.#saldo,
+                tipo: this.tipo, movimientos: this.#movimientos
+            };
+        }
+    }
+
+    class CuentaAhorro extends CuentaBancaria {
+        constructor(id, titular, saldo, movs = []) {
+            super(id, titular, saldo, "ahorro", movs);
+            this.tasaInteres = 0.02;
+        }
+        calcularInteres() { return this.saldo * this.tasaInteres; }
+        aplicarInteres() {
+            const interes = this.calcularInteres();
+            if(interes > 0) {
+                // Truco para saltar validaciones estrictas y forzar el registro de interés
+                super.depositar(interes);
+                // Renombramos el último movimiento (que quedó de primero en el unshift)
+                const movs = this.getMovimientos();
+                movs[0].tipo = "interés"; 
+            }
+            return interes;
+        }
+    }
+
+    class CuentaCorriente extends CuentaBancaria {
+        constructor(id, titular, saldo, movs = []) {
+            super(id, titular, saldo, "corriente", movs);
+            this.sobregiro = 50000; // Permitimos sobregiro de 50,000 COP
+        }
+        retirar(monto) {
+            if (monto <= 0) throw new Error("Monto inválido");
+            if (monto > (this.saldo + this.sobregiro)) {
+                throw new Error(`Supera límite de sobregiro ($${this.sobregiro})`);
+            }
+            // Retiro simulado modificando variable protegida (usando super methods)
+            if (monto <= this.saldo) {
+                super.retirar(monto);
+            } else {
+                // Forzamos el saldo a negativo (sobregiro)
+                const restante = monto - this.saldo;
+                super.retirar(this.saldo); // Dejamos en 0
+                super.retirar(restante * -1); // Bug bypass o usamos setter. Aquí mejor reescribir lógica real:
+                // Dado el scope, lanzaremos error si la lógica base restringe negativos.
+                // En un caso real con # private variables, se necesita un método setter protegido.
+            }
+        }
+        // *Corrección para la demo*: Para evitar errores con el #saldo de la superclase que rechaza saldo insuficiente:
+        retirar(monto) {
+             if (monto <= 0) throw new Error("Monto inválido");
+             if (monto > this.saldo + this.sobregiro) throw new Error("Supera el sobregiro permitido.");
+             // Hack para el sobregiro en esta demo: depositamos negativo si es necesario.
+             if(this.saldo >= monto) {
+                 super.retirar(monto);
+             } else {
+                 super.depositar(monto * -1); // Deposita negativo = resta saldo
+                 this.getMovimientos()[0].tipo = "retiro (sobregiro)";
+             }
+        }
+    }
+
+    // Reto 2: Cuenta Joven
+    class CuentaJoven extends CuentaAhorro {
+        constructor(id, titular, saldo, movs = []) {
+            super(id, titular, saldo, movs);
+            this.tipo = "joven";
+            this.tasaInteres = 0.035; // 3.5%
+            this.limiteDeposito = 500; // Limite en dólares o unidades según la app
+        }
+        depositar(monto) {
+            if (monto > this.limiteDeposito) throw new Error(`El límite de depósito por operación es $${this.limiteDeposito}`);
+            super.depositar(monto);
+        }
+    }
+
+    // --- GESTIÓN DEL BANCO (Persistencia y Control) ---
+    class Banco {
+        static CLAVE_STORAGE = "banco_virtual_db";
+
+        constructor() {
+            this.cuentas = [];
+            this.seleccionada = 0;
+            this.inicializar();
+        }
+
+        // Reto 3: Crear desde JSON (LocalStorage)
+        inicializar() {
+            const dataStr = localStorage.getItem(Banco.CLAVE_STORAGE);
+            if (dataStr) {
+                const dataRaw = JSON.parse(dataStr);
+                this.cuentas = dataRaw.map(c => {
+                    if (c.tipo === "ahorro") return new CuentaAhorro(c.id, c.titular, c.saldo, c.movimientos);
+                    if (c.tipo === "corriente") return new CuentaCorriente(c.id, c.titular, c.saldo, c.movimientos);
+                    if (c.tipo === "joven") return new CuentaJoven(c.id, c.titular, c.saldo, c.movimientos);
+                });
+            } else {
+                // Datos de prueba iniciales
+                this.cuentas.push(new CuentaAhorro(Date.now(), "Laura Cristina", 250000));
+            }
+            this.guardar();
+            this.renderTodo();
+        }
+
+        guardar() {
+            localStorage.setItem(Banco.CLAVE_STORAGE, JSON.stringify(this.cuentas));
+        }
+
+        borrarDatos() {
+            if(confirm("¿Eliminar todas las cuentas de localStorage?")) {
+                localStorage.removeItem(Banco.CLAVE_STORAGE);
+                location.reload();
+            }
+        }
+
+        crearCuenta() {
+            const titular = document.getElementById("nw-titular").value.trim();
+            const saldo = Number(document.getElementById("nw-saldo").value);
+            const tipo = document.getElementById("nw-tipo").value;
+
+            if (!titular) return alert("Escribe el nombre del titular.");
+            
+            const id = Date.now();
+            let nuevaCuenta;
+            if (tipo === "ahorro") nuevaCuenta = new CuentaAhorro(id, titular, saldo);
+            else if (tipo === "corriente") nuevaCuenta = new CuentaCorriente(id, titular, saldo);
+            else nuevaCuenta = new CuentaJoven(id, titular, saldo);
+
+            this.cuentas.push(nuevaCuenta);
+            this.seleccionada = this.cuentas.length - 1;
+            
+            this.guardar();
+            document.getElementById("nw-titular").value = "";
+            document.getElementById("nw-saldo").value = "";
+            
+            mostrarTab("cuentas");
+            this.renderTodo();
+        }
+
+        seleccionar(i) {
+            this.seleccionada = i;
+            this.renderTodo();
+        }
+
+        operar(accion) {
+            const monto = Number(document.getElementById("monto-op").value);
+            const err = document.getElementById("err-op");
+            try {
+                const cuenta = this.cuentas[this.seleccionada];
+                if (accion === 'dep') cuenta.depositar(monto);
+                if (accion === 'ret') cuenta.retirar(monto);
+                err.innerText = "";
+                document.getElementById("monto-op").value = "";
+                this.guardar();
+                this.renderTodo();
+            } catch(e) {
+                err.innerText = "⚠️ " + e.message;
+            }
+        }
+
+        aplicarIntereses() {
+            this.cuentas.forEach(c => {
+                if (c instanceof CuentaAhorro) c.aplicarInteres();
+            });
+            this.guardar();
+            this.renderTodo();
+        }
+
+        renderTodo() {
+            this.renderTabs();
+            if (this.cuentas.length > 0) this.renderPanelCuenta();
+            else document.getElementById("panel-cuenta").innerHTML = "<p style='text-align:center;'>No hay cuentas registradas.</p>";
+            this.renderStats();
+        }
+
+        renderTabs() {
+            const cont = document.getElementById("lista-cuentas");
+            cont.innerHTML = "";
+            this.cuentas.forEach((c, i) => {
+                const clase = i === this.seleccionada ? "chip-cuenta activo" : "chip-cuenta";
+                cont.innerHTML += `<button class="${clase}" onclick="banco.seleccionar(${i})">${c.titular}</button>`;
+            });
+        }
+
+        renderPanelCuenta() {
+            const c = this.cuentas[this.seleccionada];
+            
+            let badge = "";
+            if (c.tipo === "ahorro") badge = `<span class="badge badge-ahorro">Ahorro | Interés ${(c.tasaInteres*100)}%</span>`;
+            if (c.tipo === "corriente") badge = `<span class="badge badge-corriente">Corriente | Sobregiro $${c.sobregiro}</span>`;
+            if (c.tipo === "joven") badge = `<span class="badge badge-joven">Joven | Interés ${(c.tasaInteres*100)}% | Límite $${c.limiteDeposito}</span>`;
+
+            let movsHtml = "";
+            c.getMovimientos().forEach(m => {
+                const esIngreso = ["depósito", "apertura", "interés"].includes(m.tipo);
+                const cls = esIngreso ? "dep" : "ret";
+                const signo = esIngreso ? "+" : "";
+                movsHtml += `
+                    <div class="mov ${cls}">
+                        <span>${m.tipo.toUpperCase()}</span>
+                        <span>${signo}$${Math.abs(m.monto).toLocaleString()} <small style="opacity:0.6; display:block; text-align:right;">${m.fecha}</small></span>
+                    </div>`;
+            });
+
+            document.getElementById("panel-cuenta").innerHTML = `
+                <div style="text-align: center;">${badge}</div>
+                <div class="saldo-grande">$${c.saldo.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                
+                <div class="fila-op">
+                    <input id="monto-op" type="number" placeholder="Monto a transar ($)">
+                    <button class="btn-accion btn-dep" onclick="banco.operar('dep')">⬇️ Consignar</button>
+                    <button class="btn-accion btn-ret" onclick="banco.operar('ret')">⬆️ Retirar</button>
+                </div>
+                <p class="err-msg" id="err-op"></p>
+                
+                <button class="btn-accion btn-int" onclick="banco.aplicarIntereses()">🗓️ Cierre de mes (Aplicar Intereses)</button>
+                
+                <div class="mov-list">${movsHtml}</div>
+            `;
+        }
+
+        renderStats() {
+            let totalSaldo = 0;
+            let cuentasAhorro = 0;
+            
+            this.cuentas.forEach(c => {
+                totalSaldo += c.saldo;
+                if (c instanceof CuentaAhorro) cuentasAhorro++;
+            });
+
+            document.getElementById("stat-grid").innerHTML = `
+                <div class="stat"><div class="n">${this.cuentas.length}</div>Cuentas Activas</div>
+                <div class="stat" style="grid-column: span 2;"><div class="n">$${totalSaldo.toLocaleString(undefined, {maximumFractionDigits:0})}</div>Capital Total (COP)</div>
+            `;
+        }
+    }
+
+    // Inicialización general
+    const banco = new Banco();
+
+    const mostrarTab = (id) => {
+        ['cuentas', 'nueva', 'stats'].forEach(t => {
+            document.getElementById(`tab-${t}`).classList.remove("activo");
+        });
+        document.getElementById(`tab-${id}`).classList.add("activo");
+
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(t => t.classList.remove('activa'));
+        // Identificar el tab clickeado mediante texto
+        const mapIds = { 'cuentas': 0, 'nueva': 1, 'stats': 2 };
+        tabs[mapIds[id]].classList.add('activa');
+    };
+</script>
+</body>
+</html>

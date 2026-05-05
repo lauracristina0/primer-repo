@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Figuras Geométricas - POO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif; background: #faf5ff; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; color: #4a148c;
+        }
+        .panel {
+            background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%; max-width: 600px; margin-bottom: 20px;
+        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        label { font-size: 14px; font-weight: bold; }
+        select, input {
+            width: 100%; padding: 10px; margin-top: 5px; border: 2px solid #e9d8fd;
+            border-radius: 8px; box-sizing: border-box; outline: none;
+        }
+        button {
+            padding: 12px 20px; background: #b794f4; color: white; border: none; border-radius: 8px;
+            font-size: 15px; cursor: pointer; font-weight: bold; transition: 0.2s; width: 100%;
+        }
+        button:hover { background: #9f7aea; }
+        .btn-outline { background: transparent; color: #b794f4; border: 2px solid #b794f4; margin-top: 10px;}
+        canvas {
+            background: #ffffff; border: 2px dashed #d6bcfa; border-radius: 12px; width: 100%; height: 250px;
+        }
+        #info-figura { margin-top: 15px; font-size: 15px; text-align: center; background: #faf5ff; padding: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2 style="text-align: center; margin-top: 0;">Laboratorio Geométrico</h2>
+    <div class="grid">
+        <div>
+            <label>Tipo:</label>
+            <select id="tipo">
+                <option value="circulo">Círculo</option>
+                <option value="rectangulo">Rectángulo</option>
+                <option value="triangulo">Triángulo</option>
+                <option value="rombo">Rombo (Reto)</option>
+            </select>
+        </div>
+        <div>
+            <label>Color:</label>
+            <input id="color-fig" type="color" value="#b794f4">
+        </div>
+        <div>
+            <label>Valor 1 (Radio/Base/D1):</label>
+            <input id="v1" type="number" value="80">
+        </div>
+        <div>
+            <label>Valor 2 (Alto/D2):</label>
+            <input id="v2" type="number" value="60">
+        </div>
+    </div>
+    <button onclick="dibujar()">🎨 Dibujar Figura</button>
+    <button class="btn-outline" onclick="dibujarTodas()">✨ Dibujar Todas (Reto)</button>
+</div>
+
+<div class="panel">
+    <canvas id="lienzo" width="600" height="250"></canvas>
+    <div id="info-figura">Selecciona y dibuja una figura.</div>
+</div>
+
+<script>
+    class Figura {
+        constructor(color) { this.color = color; }
+        area() { return 0; }
+        descripcion() { return `Figura con área: ${this.area().toFixed(2)}`; }
+    }
+
+    class Circulo extends Figura {
+        constructor(radio, color) {
+            super(color);
+            this.radio = radio;
+        }
+        area() { return Math.PI * (this.radio ** 2); }
+        // Reto 2: Perímetro en la descripción del círculo
+        perimetro() { return 2 * Math.PI * this.radio; }
+        descripcion() { return `Círculo | Área: ${this.area().toFixed(2)} | Perímetro: ${this.perimetro().toFixed(2)}`; }
+        dibujarEn(ctx, cx, cy) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, this.radio, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    class Rectangulo extends Figura {
+        constructor(ancho, alto, color) {
+            super(color);
+            this.ancho = ancho; this.alto = alto;
+        }
+        area() { return this.ancho * this.alto; }
+        descripcion() { return `Rectángulo | Área: ${this.area().toFixed(2)}`; }
+        dibujarEn(ctx, cx, cy) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(cx - this.ancho/2, cy - this.alto/2, this.ancho, this.alto);
+        }
+    }
+
+    class Triangulo extends Figura {
+        constructor(base, altura, color) {
+            super(color);
+            this.base = base; this.altura = altura;
+        }
+        area() { return (this.base * this.altura) / 2; }
+        descripcion() { return `Triángulo | Área: ${this.area().toFixed(2)}`; }
+        dibujarEn(ctx, cx, cy) {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - this.altura/2);
+            ctx.lineTo(cx + this.base/2, cy + this.altura/2);
+            ctx.lineTo(cx - this.base/2, cy + this.altura/2);
+            ctx.fill();
+        }
+    }
+
+    // Reto 1: Clase Rombo
+    class Rombo extends Figura {
+        constructor(d1, d2, color) {
+            super(color);
+            this.d1 = d1; this.d2 = d2;
+        }
+        area() { return (this.d1 * this.d2) / 2; }
+        descripcion() { return `Rombo | Área: ${this.area().toFixed(2)}`; }
+        dibujarEn(ctx, cx, cy) {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - this.d2/2); // Arriba
+            ctx.lineTo(cx + this.d1/2, cy); // Derecha
+            ctx.lineTo(cx, cy + this.d2/2); // Abajo
+            ctx.lineTo(cx - this.d1/2, cy); // Izquierda
+            ctx.fill();
+        }
+    }
+
+    const obtenerContexto = () => {
+        const canvas = document.getElementById("lienzo");
+        const ctx = canvas.getContext("2d");
+        return { canvas, ctx };
+    };
+
+    const crearFigura = (tipo, v1, v2, color) => {
+        if (tipo === "circulo") return new Circulo(v1, color);
+        if (tipo === "rectangulo") return new Rectangulo(v1, v2, color);
+        if (tipo === "triangulo") return new Triangulo(v1, v2, color);
+        if (tipo === "rombo") return new Rombo(v1, v2, color);
+    };
+
+    const dibujar = () => {
+        const tipo = document.getElementById("tipo").value;
+        const v1 = Number(document.getElementById("v1").value);
+        const v2 = Number(document.getElementById("v2").value);
+        const color = document.getElementById("color-fig").value;
+
+        const figura = crearFigura(tipo, v1, v2, color);
+        const { canvas, ctx } = obtenerContexto();
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        figura.dibujarEn(ctx, canvas.width/2, canvas.height/2);
+        document.getElementById("info-figura").innerHTML = `<strong>${figura.descripcion()}</strong>`;
+    };
+
+    // Reto 3: Dibujar todas
+    const dibujarTodas = () => {
+        const { canvas, ctx } = obtenerContexto();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const figuras = [
+            new Circulo(40, "#ffb7b2"),
+            new Rectangulo(80, 50, "#b5ead7"),
+            new Triangulo(70, 70, "#c7ceea"),
+            new Rombo(60, 90, "#ffdac1")
+        ];
+
+        const offsets = [100, 230, 370, 500]; // Posiciones X
+
+        figuras.forEach((fig, index) => {
+            fig.dibujarEn(ctx, offsets[index], canvas.height/2);
+        });
+
+        document.getElementById("info-figura").innerHTML = "<strong>Mostrando todas las figuras en el lienzo.</strong>";
+    };
+
+    dibujar();
+</script>
+</body>
+</html>

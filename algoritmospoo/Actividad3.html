@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco Seguro - POO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center;
+        }
+        .banco {
+            background: white; border-radius: 20px; padding: 30px; width: 100%; max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .saldo { text-align: center; font-size: 48px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+        .titular { text-align: center; color: #7f8c8d; font-size: 16px; margin-bottom: 25px; }
+        .fila { display: flex; gap: 10px; margin-bottom: 15px; }
+        input, select { flex: 1; padding: 12px; border-radius: 10px; border: 2px solid #e1e8ed; font-size: 15px; }
+        button {
+            padding: 12px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white;
+            transition: 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        .btn-dep { background: #a8e6cf; color: #1b4332; }
+        .btn-ret { background: #ffb7b2; color: #7d2200; }
+        .btn-trans { background: #dcd3ff; color: #3a1c71; width: 100%; margin-bottom: 10px; }
+        .mov { font-size: 14px; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .entrada { background: #e8f8f5; color: #117a65; border-left: 4px solid #1abc9c; }
+        .salida { background: #fdedec; color: #c0392b; border-left: 4px solid #e74c3c; }
+        .error { color: #e74c3c; font-size: 14px; text-align: center; height: 20px; }
+        #resumen-box { margin-top: 15px; padding: 15px; background: #f4f6f7; border-radius: 10px; font-size: 13px; color: #34495e; }
+    </style>
+</head>
+<body>
+
+<div class="banco">
+    <div class="titular">Cuenta de: <strong id="titular">-</strong></div>
+    <div class="saldo">$<span id="saldo-display">0.00</span></div>
+    
+    <div class="fila">
+        <input id="monto" type="number" placeholder="Monto" min="0">
+        <button class="btn-dep" onclick="depositar()">Depositar</button>
+        <button class="btn-ret" onclick="retirar()">Retirar</button>
+    </div>
+
+    <!-- Reto: Transferencias -->
+    <div class="fila">
+        <select id="cuenta-destino">
+            <option value="nequi">Cuenta Nequi</option>
+            <option value="mercadopago">Mercado Pago</option>
+        </select>
+        <button class="btn-trans" onclick="transferir()">Transferir a Destino</button>
+    </div>
+
+    <p id="error-msg" class="error"></p>
+    
+    <div id="historial" style="max-height: 150px; overflow-y: auto;"></div>
+    
+    <!-- Reto: Resumen -->
+    <div id="resumen-box"></div>
+</div>
+
+<script>
+    class CuentaBancaria {
+        #saldo = 0;
+        #historial = [];
+
+        constructor(titular, saldoInicial = 0) {
+            this.titular = titular;
+            if (saldoInicial > 0) {
+                this.#saldo = saldoInicial;
+                this.#historial.push({ tipo: "apertura", monto: saldoInicial });
+            }
+        }
+
+        get saldo() { return this.#saldo; }
+
+        depositar(monto) {
+            if (monto <= 0) throw new Error("El monto debe ser mayor a 0");
+            this.#saldo += monto;
+            this.#historial.push({ tipo: "depósito", monto });
+            return this;
+        }
+
+        retirar(monto) {
+            if (monto <= 0) throw new Error("El monto debe ser mayor a 0");
+            if (monto > this.#saldo) throw new Error("Saldo insuficiente");
+            this.#saldo -= monto;
+            this.#historial.push({ tipo: "retiro", monto });
+            return this;
+        }
+
+        // Reto 1: Intentar acceder a cuenta.#saldo desde consola
+        // Si haces cuentaPrincipal.#saldo en la consola, arrojará un SyntaxError indicando que es un campo privado.
+
+        // Reto 2: Transferir a otra instancia
+        transferir(destino, monto) {
+            if (monto <= 0) throw new Error("El monto de transferencia debe ser mayor a 0");
+            if (monto > this.#saldo) throw new Error("Saldo insuficiente para transferir");
+            
+            this.retirar(monto); // Retira de esta cuenta
+            destino.depositar(monto); // Deposita en la otra
+            
+            // Reemplazar la etiqueta genérica de retiro por una de transferencia en el historial
+            this.#historial.pop(); 
+            this.#historial.push({ tipo: `transferencia a ${destino.titular}`, monto });
+        }
+
+        // Reto 3: Getter resumen
+        get resumen() {
+            return `Titular: ${this.titular} | Saldo: $${this.saldo.toFixed(2)} | Movimientos: ${this.#historial.length}`;
+        }
+
+        getHistorial() { return [...this.#historial]; }
+    }
+
+    const cuentaPrincipal = new CuentaBancaria("Laura Cristina", 50000);
+    const cuentaNequi = new CuentaBancaria("Nequi Ahorros", 0);
+    const cuentaMercadoPago = new CuentaBancaria("Mercado Pago", 0);
+
+    const render = () => {
+        document.getElementById("titular").innerText = cuentaPrincipal.titular;
+        document.getElementById("saldo-display").innerText = cuentaPrincipal.saldo.toFixed(2);
+        
+        const hist = document.getElementById("historial");
+        hist.innerHTML = "";
+        const movimientos = cuentaPrincipal.getHistorial().reverse();
+        
+        movimientos.forEach(m => {
+            const esSalida = m.tipo.includes("retiro") || m.tipo.includes("transferencia");
+            const clase = esSalida ? "mov salida" : "mov entrada";
+            const signo = esSalida ? "-" : "+";
+            hist.innerHTML += `<div class="${clase}"><span>${m.tipo}</span> <strong>${signo}$${m.monto.toFixed(2)}</strong></div>`;
+        });
+
+        document.getElementById("resumen-box").innerText = cuentaPrincipal.resumen;
+    };
+
+    const manejarTransaccion = (accion) => {
+        const monto = Number(document.getElementById("monto").value);
+        const err = document.getElementById("error-msg");
+        try {
+            accion(monto);
+            err.innerText = "";
+            document.getElementById("monto").value = ""; // Limpiar input
+            render();
+        } catch(e) {
+            err.innerText = "⚠️ " + e.message;
+        }
+    };
+
+    const depositar = () => manejarTransaccion((monto) => cuentaPrincipal.depositar(monto));
+    const retirar = () => manejarTransaccion((monto) => cuentaPrincipal.retirar(monto));
+    
+    const transferir = () => {
+        const destinoKey = document.getElementById("cuenta-destino").value;
+        const cuentaDestino = destinoKey === "nequi" ? cuentaNequi : cuentaMercadoPago;
+        manejarTransaccion((monto) => cuentaPrincipal.transferir(cuentaDestino, monto));
+    };
+
+    render();
+</script>
+</body>
+</html>

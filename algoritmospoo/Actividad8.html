@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notas Persistentes - POO</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfcfb; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .panel { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); width: 100%; max-width: 600px; margin-bottom: 20px; }
+        textarea { width: 100%; height: 90px; padding: 12px; font-size: 15px; border: 2px solid #e2ebf0; border-radius: 10px; box-sizing: border-box; resize: none; font-family: inherit; }
+        .controles-nota { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+        input[type="color"] { border: none; border-radius: 8px; width: 45px; height: 45px; cursor: pointer; padding: 0; }
+        button { padding: 12px; border: none; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; flex: 1; }
+        button:hover { opacity: 0.8; }
+        .btn-guardar { background: #b5ead7; color: #1b4332; }
+        .btn-limpiar { background: #ffdac1; color: #7d2200; }
+        .btn-exportar { background: #e0bbe4; color: #4a148c; width: 100%; margin-top: 10px; }
+        .busqueda { width: 100%; padding: 10px; margin-bottom: 15px; border: 2px solid #e2ebf0; border-radius: 10px; box-sizing: border-box; }
+        #lista-notas { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .nota-card { padding: 15px; border-radius: 12px; position: relative; color: #444; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 6px solid rgba(0,0,0,0.1); }
+        .nota-fecha { font-size: 11px; opacity: 0.7; margin-bottom: 5px; font-weight: bold; }
+        .nota-texto { font-size: 15px; white-space: pre-wrap; }
+        .btn-del-nota { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.6); color: #d63031; border-radius: 50%; width: 28px; height: 28px; padding: 0; display: flex; justify-content: center; align-items: center; }
+        .storage-info { text-align: center; font-size: 12px; color: #a4b0be; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2 style="margin-top: 0; color: #2d3436;">Mis Notas</h2>
+    <textarea id="inp-nota" placeholder="Escribe una nueva idea aquí..."></textarea>
+    
+    <div class="controles-nota">
+        <!-- Reto: Selector de color -->
+        <input type="color" id="inp-color" value="#e2f0cb"> 
+        <button class="btn-guardar" onclick="gestor.guardar()">Guardar Nota</button>
+        <button class="btn-limpiar" onclick="gestor.limpiarTodo()">Borrar Todo</button>
+    </div>
+</div>
+
+<div class="panel">
+    <!-- Reto Bonus: Buscador de notas -->
+    <input type="text" id="busqueda" class="busqueda" placeholder="🔍 Buscar notas..." onkeyup="gestor.buscar()">
+    
+    <div id="lista-notas"></div>
+    
+    <!-- Reto: Exportar JSON -->
+    <button class="btn-exportar" onclick="gestor.exportar()">📥 Descargar Notas (JSON)</button>
+    <div class="storage-info" id="storage-info"></div>
+</div>
+
+<script>
+    class GestorNotas {
+        static CLAVE = "mis_notas_avanzadas";
+
+        constructor() {
+            this.notas = this.cargarDeStorage();
+            this.render();
+        }
+
+        cargarDeStorage() {
+            const json = localStorage.getItem(GestorNotas.CLAVE);
+            return json ? JSON.parse(json) : [];
+        }
+
+        guardarEnStorage() {
+            localStorage.setItem(GestorNotas.CLAVE, JSON.stringify(this.notas));
+        }
+
+        guardar() {
+            const texto = document.getElementById("inp-nota").value.trim();
+            const color = document.getElementById("inp-color").value;
+            if (!texto) return;
+
+            const nota = {
+                id: Date.now(),
+                texto: texto,
+                color: color,
+                fecha: new Date().toLocaleString()
+            };
+
+            this.notas.unshift(nota);
+            this.guardarEnStorage();
+            document.getElementById("inp-nota").value = "";
+            this.render();
+        }
+
+        eliminar(id) {
+            this.notas = this.notas.filter(n => n.id !== id);
+            this.guardarEnStorage();
+            this.render();
+        }
+
+        limpiarTodo() {
+            if (!confirm("¿Seguro que deseas borrar TODAS las notas?")) return;
+            this.notas = [];
+            localStorage.removeItem(GestorNotas.CLAVE);
+            this.render();
+        }
+
+        // Reto Bonus: Búsqueda dinámica
+        buscar() {
+            const termino = document.getElementById("busqueda").value.toLowerCase();
+            const filtradas = this.notas.filter(n => n.texto.toLowerCase().includes(termino));
+            this.renderLista(filtradas);
+        }
+
+        // Reto: Exportar a JSON
+        exportar() {
+            if (this.notas.length === 0) return alert("No hay notas para exportar.");
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.notas, null, 2));
+            const btnDescarga = document.createElement('a');
+            btnDescarga.setAttribute("href", dataStr);
+            btnDescarga.setAttribute("download", "mis_notas.json");
+            document.body.appendChild(btnDescarga);
+            btnDescarga.click();
+            btnDescarga.remove();
+        }
+
+        render() {
+            this.renderLista(this.notas);
+            const bytes = (localStorage.getItem(GestorNotas.CLAVE) || "").length;
+            document.getElementById("storage-info").innerText = `💾 Espacio utilizado en localStorage: ${bytes} bytes`;
+        }
+
+        renderLista(lista) {
+            const cont = document.getElementById("lista-notas");
+            cont.innerHTML = "";
+            lista.forEach(n => {
+                cont.innerHTML += `
+                    <div class="nota-card" style="background-color: ${n.color};">
+                        <div class="nota-fecha">${n.fecha}</div>
+                        <div class="nota-texto">${n.texto}</div>
+                        <button class="btn-del-nota" onclick="gestor.eliminar(${n.id})">❌</button>
+                    </div>
+                `;
+            });
+        }
+    }
+
+    const gestor = new GestorNotas();
+</script>
+</body>
+</html>

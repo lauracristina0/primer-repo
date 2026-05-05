@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>09 - Calculadora de IVA</title>
+    <title>09 - Calculadora de IVA y Descuento</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,25 +10,63 @@
             display: flex; justify-content: center; align-items: center;
             background: linear-gradient(135deg, #EEF2FF 0%, #C7D2FE 100%);
         }
-        .card { background: rgba(255,255,255,0.7); padding: 50px; border-radius: 20px; width: 350px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
-        input { padding: 12px; font-size: 18px; width: 200px; border: 2px solid #ccc; border-radius: 10px; text-align: center; margin-bottom: 15px;}
-        button { padding: 12px 24px; font-size: 16px; border: none; border-radius: 10px; cursor: pointer; background: #4338CA; color: white; font-weight: bold; width: 100%; }
+        .card { 
+            background: rgba(255,255,255,0.7); 
+            padding: 40px; 
+            border-radius: 20px; 
+            width: 350px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+        }
+        input { 
+            padding: 12px; 
+            font-size: 18px; 
+            width: 200px; 
+            border: 2px solid #ccc; 
+            border-radius: 10px; 
+            text-align: center; 
+            margin-bottom: 20px;
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            background: #4338CA; 
+            color: white; 
+            font-weight: bold; 
+            width: 100%; 
+            margin-bottom: 10px;
+            transition: opacity 0.3s ease;
+        }
+        button:hover { opacity: 0.9; }
+        .btn-descuento {
+            background: #10B981; /* Tono verde esmeralda que combina con el diseño pastel */
+        }
         #desglose { margin-top: 20px; text-align: left; }
-        .linea { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #E5E7EB; font-size: 16px; }
-        .total { font-weight: bold; font-size: 20px; color: #4338CA; border-bottom: none; }
+        .linea { 
+            display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #E5E7EB; font-size: 16px; 
+        }
+        .total { font-weight: bold; font-size: 20px; color: #4338CA; border-bottom: none; margin-top: 10px; }
+        .ahorro { color: #10B981; font-weight: bold; justify-content: center; border-bottom: none; background: #ECFDF5; border-radius: 8px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h3>09. Calculadora de Precios</h3>
+        <h3 style="color: #374151;">09. Calculadora de Precios</h3>
         <label style="font-weight: bold; color: #555;">Precio base ($):</label><br><br>
         <input id="inp-precio" type="number" placeholder="Ej: 50000" min="0">
-        <button onclick="calcularConIVA()">Calcular con IVA 19%</button>
+        
+        <button onclick="calcularConIVA()">Calcular con IVA 10%</button>
+        <button class="btn-descuento" onclick="calcularConDescuento()">Calcular con descuento del 10%</button>
+        
         <div id="desglose"></div>
     </div>
 
     <script>
-        const TASA_IVA = 0.19;
+        const TASA_IVA = 0.10;
+        const TASA_DESCUENTO = 0.10;
+
         function calcularConIVA() {
             const precioBase = Number(document.getElementById("inp-precio").value);
             if (precioBase <= 0) {
@@ -38,14 +76,44 @@
             const valorIVA = precioBase * TASA_IVA;
             const precioTotal = precioBase + valorIVA;
             
-            const baseFormateada = precioBase.toFixed(2);
-            const ivaFormateado = valorIVA.toFixed(2);
-            const totalFormateado = precioTotal.toFixed(2);
+            document.getElementById("desglose").innerHTML = `
+                <div class="linea"><span>Precio base:</span><span>$${precioBase.toFixed(2)}</span></div>
+                <div class="linea"><span>IVA (10%):</span><span>$${valorIVA.toFixed(2)}</span></div>
+                <div class="linea total"><span>TOTAL:</span><span>$${precioTotal.toFixed(2)}</span></div>
+            `;
+        }
+
+        function calcularConDescuento() {
+            const precioBase = Number(document.getElementById("inp-precio").value);
+            if (precioBase <= 0) {
+                alert("Por favor ingresa un precio mayor a 0");
+                return;
+            }
+
+            // 1. Se calcula el descuento sobre la base
+            const descuento = precioBase * TASA_DESCUENTO;
             
-            document.getElementById("desglose").innerHTML = 
-                '<div class="linea"><span>Precio base:</span><span>$' + baseFormateada + '</span></div>' +
-                '<div class="linea"><span>IVA (19%):</span><span>$' + ivaFormateado + '</span></div>' +
-                '<div class="linea total"><span>TOTAL:</span><span>$' + totalFormateado + '</span></div>';
+            // 2. Se obtiene el subtotal (Precio ANTES de aplicar el IVA)
+            const precioSubtotal = precioBase - descuento;
+
+            // 3. Se calcula el IVA sobre el nuevo subtotal
+            const valorIVA = precioSubtotal * TASA_IVA;
+
+            // 4. Se calcula el total a pagar
+            const precioTotal = precioSubtotal + valorIVA;
+
+            // 5. Cálculo del ahorro (Costo Total Original - Nuevo Costo Total)
+            const costoTotalOriginal = precioBase + (precioBase * TASA_IVA);
+            const ahorroReal = costoTotalOriginal - precioTotal;
+
+            document.getElementById("desglose").innerHTML = `
+                <div class="linea"><span>Precio base:</span><span>$${precioBase.toFixed(2)}</span></div>
+                <div class="linea" style="color: #10B981;"><span>Descuento (10%):</span><span>-$${descuento.toFixed(2)}</span></div>
+                <div class="linea" style="color: #6B7280; font-size: 14px;"><span>Subtotal:</span><span>$${precioSubtotal.toFixed(2)}</span></div>
+                <div class="linea"><span>IVA (10%):</span><span>$${valorIVA.toFixed(2)}</span></div>
+                <div class="linea total"><span>TOTAL:</span><span>$${precioTotal.toFixed(2)}</span></div>
+                <div class="linea ahorro"><span>¡Te ahorras $${ahorroReal.toFixed(2)} en total!</span></div>
+            `;
         }
     </script>
 </body>

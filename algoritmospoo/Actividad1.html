@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mascota Virtual - POO Elegante</title>
+    <style>
+        :root {
+            --pastel-green: #e2f0cb;
+            --pastel-blue: #b5ead7;
+            --pastel-pink: #ffdac1;
+            --pastel-purple: #e0bbe4;
+            --text-color: #5d5d5d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .tarjeta {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .emoji-grande {
+            font-size: 90px;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            background: var(--pastel-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .barra-cont {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 10px;
+            margin: 8px 0 15px;
+            overflow: hidden;
+        }
+
+        .barra {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .botones {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .btn-comer { background: var(--pastel-green); }
+        .btn-jugar { background: var(--pastel-pink); }
+        .btn-dormir { background: var(--pastel-purple); }
+        .btn-cumple { background: #b2cefe; grid-column: span 2; }
+
+        #log {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            min-height: 1.2rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tarjeta">
+    <div class="emoji-grande" id="emoji-mascota">🐾</div>
+    <div class="badge-container">
+        <span class="badge" id="txt-edad">Edad: 0</span>
+        <span class="badge" id="txt-nivel">Nivel: 1</span>
+    </div>
+    <h2 id="nombre-mascota" style="margin: 0 0 15px;">Cargando...</h2>
+
+    <div class="stat-label"><span>Hambre</span><span id="val-hambre">0</span></div>
+    <div class="barra-cont"><div class="barra" id="barra-hambre" style="background: #ffb7b2;"></div></div>
+
+    <div class="stat-label"><span>Energía</span><span id="val-energia">0</span></div>
+    <div class="barra-cont"><div class="barra" id="barra-energia" style="background: #b5ead7;"></div></div>
+
+    <div class="stat-label"><span>Felicidad</span><span id="val-felicidad">0</span></div>
+    <div class="barra-cont"><div class="barra" id="barra-felicidad" style="background: #c7ceea;"></div></div>
+
+    <div class="botones">
+        <button class="btn-comer" onclick="miMascota.comer()">🍎 Comer</button>
+        <button class="btn-jugar" onclick="miMascota.jugar()">⚽ Jugar</button>
+        <button class="btn-dormir" onclick="miMascota.dormir()">💤 Dormir</button>
+        <button class="btn-cumple" onclick="miMascota.cumpleaños()">🎂 Cumpleaños</button>
+    </div>
+    <div id="log"></div>
+</div>
+
+<script>
+    class Mascota {
+        constructor(nombre, emoji) {
+            this.nombre = nombre;
+            this.baseEmoji = emoji;
+            this.hambre = 50;
+            this.energia = 80;
+            this.felicidad = 70;
+            this.edad = 0; // Reto 1
+            this.nivel = 1; // Reto 2
+        }
+
+        comer() {
+            this.hambre = Math.max(0, this.hambre - 30);
+            this.energia = Math.min(100, this.energia + 5);
+            this.actualizarUI("¡Delicioso! Hambre reducida.");
+        }
+
+        jugar() {
+            if (this.energia < 20) {
+                this.actualizarUI("Demasiado cansado para jugar...");
+                return;
+            }
+            this.energia = Math.max(0, this.energia - 25);
+            this.felicidad = Math.min(100, this.felicidad + 20);
+            this.hambre = Math.min(100, this.hambre + 10);
+            this.verificarNivel();
+            this.actualizarUI("¡Eso fue muy divertido!");
+        }
+
+        dormir() {
+            this.energia = Math.min(100, this.energia + 40);
+            this.felicidad = Math.min(100, this.felicidad + 5);
+            this.actualizarUI("Zzz... Energía recuperada.");
+        }
+
+        cumpleaños() { // Reto 1
+            this.edad++;
+            this.actualizarUI(`¡Feliz cumpleaños! Ahora tengo ${this.edad} años.`);
+        }
+
+        verificarNivel() { // Reto 2
+            if (this.felicidad >= 100) {
+                this.nivel++;
+                this.felicidad = 50; // Reset para el siguiente nivel
+                this.actualizarUI("¡SUBIDA DE NIVEL! Soy más feliz.");
+            }
+        }
+
+        // Bonus: Lógica de emojis dinámicos
+        obtenerEmoji() {
+            if (this.hambre > 80) return "😫";
+            if (this.energia < 20) return "😴";
+            if (this.felicidad > 80) return "🤩";
+            if (this.felicidad < 30) return "😢";
+            return this.baseEmoji;
+        }
+
+        actualizarUI(mensaje) {
+            document.getElementById("nombre-mascota").innerText = this.nombre;
+            document.getElementById("emoji-mascota").innerText = this.obtenerEmoji();
+            document.getElementById("txt-edad").innerText = `Edad: ${this.edad}`;
+            document.getElementById("txt-nivel").innerText = `Nivel: ${this.nivel}`;
+            
+            // Valores numéricos
+            document.getElementById("val-hambre").innerText = this.hambre;
+            document.getElementById("val-energia").innerText = this.energia;
+            document.getElementById("val-felicidad").innerText = this.felicidad;
+
+            // Barras visuales
+            document.getElementById("barra-hambre").style.width = this.hambre + "%";
+            document.getElementById("barra-energia").style.width = this.energia + "%";
+            document.getElementById("barra-felicidad").style.width = this.felicidad + "%";
+            
+            document.getElementById("log").innerText = mensaje;
+        }
+    }
+
+    // Instancia inicial
+    const miMascota = new Mascota("Koda", "🐶");
+    miMascota.actualizarUI("¡Hola Laura! Soy tu nueva mascota.");
+</script>
+
+</body>
+</html>
