@@ -44,7 +44,7 @@
         <button class="btn-ret" onclick="retirar()">Retirar</button>
     </div>
 
-    <!-- Reto: Transferencias -->
+    
     <div class="fila">
         <select id="cuenta-destino">
             <option value="nequi">Cuenta Nequi</option>
@@ -56,8 +56,7 @@
     <p id="error-msg" class="error"></p>
     
     <div id="historial" style="max-height: 150px; overflow-y: auto;"></div>
-    
-    <!-- Reto: Resumen -->
+   
     <div id="resumen-box"></div>
 </div>
 
@@ -91,23 +90,20 @@
             return this;
         }
 
-        // Reto 1: Intentar acceder a cuenta.#saldo desde consola
-        // Si haces cuentaPrincipal.#saldo en la consola, arrojará un SyntaxError indicando que es un campo privado.
-
-        // Reto 2: Transferir a otra instancia
+        
         transferir(destino, monto) {
             if (monto <= 0) throw new Error("El monto de transferencia debe ser mayor a 0");
             if (monto > this.#saldo) throw new Error("Saldo insuficiente para transferir");
             
-            this.retirar(monto); // Retira de esta cuenta
-            destino.depositar(monto); // Deposita en la otra
+            this.retirar(monto); 
+            destino.depositar(monto); 
             
-            // Reemplazar la etiqueta genérica de retiro por una de transferencia en el historial
+            
             this.#historial.pop(); 
             this.#historial.push({ tipo: `transferencia a ${destino.titular}`, monto });
         }
 
-        // Reto 3: Getter resumen
+        
         get resumen() {
             return `Titular: ${this.titular} | Saldo: $${this.saldo.toFixed(2)} | Movimientos: ${this.#historial.length}`;
         }
@@ -143,7 +139,7 @@
         try {
             accion(monto);
             err.innerText = "";
-            document.getElementById("monto").value = ""; // Limpiar input
+            document.getElementById("monto").value = ""; 
             render();
         } catch(e) {
             err.innerText = "⚠️ " + e.message;

@@ -51,8 +51,8 @@
             this.precio = precio;
             this.categoria = categoria;
             this.emoji = emoji;
-            this.favorito = false; // Reto 2
-            this.vistos = 0;       // Reto 3
+            this.favorito = false; 
+            this.vistos = 0;       
         }
     }
 
@@ -122,7 +122,7 @@
             const busq = document.getElementById("busqueda").value.toLowerCase();
             const orden = document.getElementById("orden").value;
             
-            // 1. Filtrar
+            
             let resultado = this.productos.filter(p => {
                 const coincideCategoria = this.categoriaActiva === "Todos" || p.categoria === this.categoriaActiva;
                 const coincideBusqueda = p.nombre.toLowerCase().includes(busq);
@@ -130,7 +130,7 @@
                 return coincideCategoria && coincideBusqueda && coincideFavorito;
             });
 
-            // 2. Ordenar
+          
             if (orden === "precioAsc") resultado.sort((a, b) => a.precio - b.precio);
             if (orden === "precioDesc") resultado.sort((a, b) => b.precio - a.precio);
             if (orden === "nombreAz") resultado.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -139,7 +139,7 @@
         }
 
         renderGrid(lista) {
-            // Stats
+           
             const total = lista.reduce((sum, p) => sum + p.precio, 0);
             const prom = lista.length ? (total / lista.length).toFixed(2) : 0;
             document.getElementById("stats-bar").innerHTML = `
@@ -173,7 +173,7 @@
         }
     }
 
-    // Adapté los productos al perfil (Estudio, Desarrollo y Entretenimiento)
+   
     const misProductos = [
         new Producto(1, "Curso JavaScript Avanzado", 120000, "Desarrollo", "💻"),
         new Producto(2, "Curso Bases de Datos SQL", 95000, "Desarrollo", "🗄️"),

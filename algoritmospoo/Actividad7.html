@@ -19,7 +19,7 @@
 <body>
 
 <div class="panel">
-    <h3>🔄 Convertidor de Unidades (<span id="contador-conv">0</span> usos)</h3>
+    <h3>Convertidor de Unidades (<span id="contador-conv">0</span> usos)</h3>
     <div class="grid-2">
         <input id="valor-conv" type="number" placeholder="Ingresa un valor">
         <select id="tipo-conv">
@@ -34,14 +34,14 @@
 </div>
 
 <div class="panel">
-    <h3>📊 Análisis Estadístico</h3>
+    <h3>Análisis Estadístico</h3>
     <input id="lista-nums" type="text" placeholder="Ej: 10, 20, 15, 30">
     <button onclick="ejecutarStats()" style="background: #b5ead7; color: #1b4332;">Calcular</button>
     <div id="res-stats" style="margin-top: 15px;"></div>
 </div>
 
 <div class="panel">
-    <h3>✅ Validador de Datos (Reto Bonus)</h3>
+    <h3>Validador de Datos (Reto Bonus)</h3>
     <div class="grid-2">
         <input id="val-email" type="text" placeholder="Correo electrónico">
         <button onclick="validarEmail()" style="margin-top:0;">Validar Email</button>
@@ -51,7 +51,7 @@
 
 <script>
     class Calculadora {
-        static totalConversiones = 0; // Reto: Contador estático
+        static totalConversiones = 0; 
 
         static kmAMillas(km) { return km * 0.621371; }
         static millasAKm(m) { return m * 1.60934; }
@@ -59,7 +59,7 @@
         static fahrACelsius(f) { return (f - 32) * 5/9; }
 
         static convertir(valor, tipo) {
-            this.totalConversiones++; // Incrementar contador
+            this.totalConversiones++; 
             document.getElementById("contador-conv").innerText = this.totalConversiones;
 
             if (tipo === "kmMillas") return this.kmAMillas(valor);
@@ -79,7 +79,7 @@
             const sumDif = nums.reduce((acc, val) => acc + Math.pow(val - prom, 2), 0);
             return Math.sqrt(sumDif / nums.length);
         }
-        // Reto: Calcular Mediana
+        
         static mediana(nums) {
             const ordenados = [...nums].sort((a, b) => a - b);
             const mitad = Math.floor(ordenados.length / 2);
@@ -90,7 +90,7 @@
         }
     }
 
-    // Reto Bonus: Clase Validador
+   
     class Validador {
         static esEmail(str) {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -100,7 +100,7 @@
         static tieneLongitud(str, min, max) { return str.length >= min && str.length <= max; }
     }
 
-    // --- Funciones de Interfaz ---
+   
     const ejecutarConversion = () => {
         const valor = Number(document.getElementById("valor-conv").value);
         const tipo = document.getElementById("tipo-conv").value;

@@ -51,15 +51,15 @@
     
     <div class="acciones-carrito">
         <button class="btn-general btn-vaciar" onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
-        <!-- Reto 2: Botón de descuento -->
-        <button class="btn-general btn-descuento" onclick="aplicarDesc()">🎟️ Aplicar 10% Descuento</button>
+        
+        <button class="btn-general btn-descuento" onclick="aplicarDesc()"> Aplicar 10% Descuento</button>
     </div>
     <div id="msg-ahorro" style="text-align: center; margin-top: 10px; color: #1b4332; font-weight: bold;"></div>
 </div>
 
 <script>
     class Producto {
-        // Reto 1: Propiedad stock agregada
+        
         constructor(nombre, precio, emoji, stock) {
             this.nombre = nombre;
             this.precio = precio;
@@ -98,14 +98,14 @@
             } else {
                 this.items.splice(indice, 1);
             }
-            if(this.items.length === 0) this.descuentoActivo = 0; // Resetear descuento si se vacía
+            if(this.items.length === 0) this.descuentoActivo = 0; 
         }
 
         calcularSubtotal() {
             return this.items.reduce((total, item) => total + (item.producto.precio * item.cantidad), 0);
         }
 
-        // Reto 2: Aplicar descuento
+        
         aplicarDescuento(porcentaje) {
             this.descuentoActivo = porcentaje;
         }
@@ -121,12 +121,12 @@
         }
     }
 
-    // Catálogo con datos integrados
+
     const catalogo = [
         new Producto("Bioaqua Skincare", 45000, "🧴", 5),
         new Producto("Riot Points x1380", 35000, "🎮", 10),
         new Producto("Teclado Minimalista", 120000, "⌨️", 3),
-        new Producto("Libro Alice Kellen", 55000, "📖", 0), // Este producto iniciará agotado
+        new Producto("Libro Alice Kellen", 55000, "📖", 0), 
         new Producto("Monitor 24'", 450000, "🖥️", 2),
         new Producto("Mouse Inalámbrico", 25000, "🖱️", 8)
     ];
@@ -177,7 +177,7 @@
         
         document.getElementById("total-box").innerText = `Total: $${total.toLocaleString()}`;
         
-        // Reto 3: Mostrar cuánto se ahorra
+       
         const msgAhorro = document.getElementById("msg-ahorro");
         if (carrito.descuentoActivo > 0 && subtotal > 0) {
             const ahorro = subtotal - total;
@@ -186,25 +186,25 @@
             msgAhorro.innerText = "";
         }
         
-        renderCatalogo(); // Re-renderizar catálogo por si el stock cambió visualmente
+        renderCatalogo(); 
     };
 
     const agregar = (i) => {
         if (carrito.agregar(catalogo[i])) {
-            catalogo[i].stock--; // Reducir stock localmente
+            catalogo[i].stock--; 
             renderCarrito();
         }
     };
 
     const quitarItem = (i) => {
         const productoDevuelto = carrito.items[i].producto;
-        productoDevuelto.stock++; // Devolver stock al catálogo
+        productoDevuelto.stock++; 
         carrito.quitar(i);
         renderCarrito();
     };
 
     const vaciarCarrito = () => {
-        // Devolver todo el stock
+        
         carrito.items.forEach(it => { it.producto.stock += it.cantidad; });
         carrito.vaciar();
         renderCarrito();

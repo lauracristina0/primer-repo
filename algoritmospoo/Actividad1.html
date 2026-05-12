@@ -129,10 +129,10 @@
     <div class="barra-cont"><div class="barra" id="barra-felicidad" style="background: #c7ceea;"></div></div>
 
     <div class="botones">
-        <button class="btn-comer" onclick="miMascota.comer()">🍎 Comer</button>
-        <button class="btn-jugar" onclick="miMascota.jugar()">⚽ Jugar</button>
-        <button class="btn-dormir" onclick="miMascota.dormir()">💤 Dormir</button>
-        <button class="btn-cumple" onclick="miMascota.cumpleaños()">🎂 Cumpleaños</button>
+        <button class="btn-comer" onclick="miMascota.comer()"> Comer</button>
+        <button class="btn-jugar" onclick="miMascota.jugar()"> Jugar</button>
+        <button class="btn-dormir" onclick="miMascota.dormir()"> Dormir</button>
+        <button class="btn-cumple" onclick="miMascota.cumpleaños()"> Cumpleaños</button>
     </div>
     <div id="log"></div>
 </div>
@@ -145,8 +145,8 @@
             this.hambre = 50;
             this.energia = 80;
             this.felicidad = 70;
-            this.edad = 0; // Reto 1
-            this.nivel = 1; // Reto 2
+            this.edad = 0; 
+            this.nivel = 1; 
         }
 
         comer() {
@@ -173,25 +173,25 @@
             this.actualizarUI("Zzz... Energía recuperada.");
         }
 
-        cumpleaños() { // Reto 1
+        cumpleaños() { 
             this.edad++;
             this.actualizarUI(`¡Feliz cumpleaños! Ahora tengo ${this.edad} años.`);
         }
 
-        verificarNivel() { // Reto 2
+        verificarNivel() { 
             if (this.felicidad >= 100) {
                 this.nivel++;
-                this.felicidad = 50; // Reset para el siguiente nivel
+                this.felicidad = 50; 
                 this.actualizarUI("¡SUBIDA DE NIVEL! Soy más feliz.");
             }
         }
 
-        // Bonus: Lógica de emojis dinámicos
+       
         obtenerEmoji() {
-            if (this.hambre > 80) return "😫";
-            if (this.energia < 20) return "😴";
-            if (this.felicidad > 80) return "🤩";
-            if (this.felicidad < 30) return "😢";
+            if (this.hambre > 80) return "";
+            if (this.energia < 20) return "";
+            if (this.felicidad > 80) return "";
+            if (this.felicidad < 30) return "";
             return this.baseEmoji;
         }
 
@@ -201,12 +201,12 @@
             document.getElementById("txt-edad").innerText = `Edad: ${this.edad}`;
             document.getElementById("txt-nivel").innerText = `Nivel: ${this.nivel}`;
             
-            // Valores numéricos
+            
             document.getElementById("val-hambre").innerText = this.hambre;
             document.getElementById("val-energia").innerText = this.energia;
             document.getElementById("val-felicidad").innerText = this.felicidad;
 
-            // Barras visuales
+            
             document.getElementById("barra-hambre").style.width = this.hambre + "%";
             document.getElementById("barra-energia").style.width = this.energia + "%";
             document.getElementById("barra-felicidad").style.width = this.felicidad + "%";
@@ -215,8 +215,8 @@
         }
     }
 
-    // Instancia inicial
-    const miMascota = new Mascota("Koda", "🐶");
+    
+    const miMascota = new Mascota("Keyla", "🐱");
     miMascota.actualizarUI("¡Hola Laura! Soy tu nueva mascota.");
 </script>
 

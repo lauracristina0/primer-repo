@@ -53,7 +53,7 @@
         </div>
         <p id="log-2" style="color:#888; font-style: italic;"></p>
         
-        <!-- Retos -->
+        
         <div class="retos-box">
             <strong>Retos:</strong>
             <div id="mas-feliz" style="margin-top: 10px; color: #2d6a4f;">La más feliz es: -</div>
@@ -84,7 +84,7 @@
         }
     }
 
-    // Reto 1: Agregada mascota extra "Poro"
+   
     const mascotas = [
         new Mascota("Koda", "🐶"),
         new Mascota("Michi", "🐱"),
@@ -128,7 +128,7 @@
         renderMascota();
     };
 
-    // Reto 2: Muestra la mascota más feliz
+    
     const calcularMasFeliz = () => {
         let maxFelicidad = -1;
         let nombreMasFeliz = "";
@@ -141,7 +141,7 @@
         document.getElementById("mas-feliz").innerText = `La más feliz es: ${nombreMasFeliz} (${maxFelicidad}%)`;
     };
 
-    // Reto 3: Alimentar a todas
+    
     const alimentarTodas = () => {
         mascotas.forEach(m => m.comer());
         document.getElementById("log-2").innerText = "¡Todas las mascotas han sido alimentadas!";

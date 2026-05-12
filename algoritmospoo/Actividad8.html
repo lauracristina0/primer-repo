@@ -30,7 +30,7 @@
     <textarea id="inp-nota" placeholder="Escribe una nueva idea aquí..."></textarea>
     
     <div class="controles-nota">
-        <!-- Reto: Selector de color -->
+        
         <input type="color" id="inp-color" value="#e2f0cb"> 
         <button class="btn-guardar" onclick="gestor.guardar()">Guardar Nota</button>
         <button class="btn-limpiar" onclick="gestor.limpiarTodo()">Borrar Todo</button>
@@ -38,13 +38,13 @@
 </div>
 
 <div class="panel">
-    <!-- Reto Bonus: Buscador de notas -->
-    <input type="text" id="busqueda" class="busqueda" placeholder="🔍 Buscar notas..." onkeyup="gestor.buscar()">
+    
+    <input type="text" id="busqueda" class="busqueda" placeholder=" Buscar notas..." onkeyup="gestor.buscar()">
     
     <div id="lista-notas"></div>
     
-    <!-- Reto: Exportar JSON -->
-    <button class="btn-exportar" onclick="gestor.exportar()">📥 Descargar Notas (JSON)</button>
+    
+    <button class="btn-exportar" onclick="gestor.exportar()">Descargar Notas (JSON)</button>
     <div class="storage-info" id="storage-info"></div>
 </div>
 
@@ -97,14 +97,14 @@
             this.render();
         }
 
-        // Reto Bonus: Búsqueda dinámica
+        
         buscar() {
             const termino = document.getElementById("busqueda").value.toLowerCase();
             const filtradas = this.notas.filter(n => n.texto.toLowerCase().includes(termino));
             this.renderLista(filtradas);
         }
 
-        // Reto: Exportar a JSON
+        
         exportar() {
             if (this.notas.length === 0) return alert("No hay notas para exportar.");
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.notas, null, 2));
@@ -119,7 +119,7 @@
         render() {
             this.renderLista(this.notas);
             const bytes = (localStorage.getItem(GestorNotas.CLAVE) || "").length;
-            document.getElementById("storage-info").innerText = `💾 Espacio utilizado en localStorage: ${bytes} bytes`;
+            document.getElementById("storage-info").innerText = `💾 Espacio utilizado: ${bytes} bytes`;
         }
 
         renderLista(lista) {

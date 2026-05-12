@@ -65,7 +65,7 @@
             this.historial = [];
             this.elementold = idElemento;
             
-            // Reto Bonus: Variables para el récord de 5 segundos
+            
             this.record = 0;
             this.tiempoActivo = false;
             this.clicsEnRonda = 0;
@@ -74,15 +74,15 @@
         }
 
         iniciarEventos() {
-            // Arrow function anónima para mantener el "this" de la clase
+            
             const btn = document.getElementById("btn-click");
             btn.addEventListener("click", () => this.manejarClic("Clic en botón"));
 
-            // Reto: Botón Resetear
+            
             const btnReset = document.getElementById("btn-reset");
             btnReset.addEventListener("click", () => this.resetear());
 
-            // bind(this) para fijar el contexto al usar eventos del document
+            
             document.addEventListener("keydown", this.manejarTecla.bind(this));
         }
 
@@ -91,16 +91,16 @@
             const hora = new Date().toLocaleTimeString();
             this.historial.unshift({ fuente, hora, num: this.clics });
 
-            if (this.historial.length > 5) this.historial.pop(); // Mantener solo 5
+            if (this.historial.length > 5) this.historial.pop(); 
 
             this.gestionarRecord();
             this.render();
         }
 
-        // Reto: Soporte para la tecla Enter y Espacio
+        
         manejarTecla(event) {
             if (event.code === "Space" || event.code === "Enter") {
-                event.preventDefault(); // Evitar scroll de la página
+                event.preventDefault(); 
                 this.manejarClic(`Tecla ${event.code}`);
             }
         }
@@ -118,7 +118,7 @@
                 this.tiempoActivo = true;
                 this.clicsEnRonda = 0;
                 
-                // Temporizador de 5 segundos
+               
                 setTimeout(() => {
                     if (this.clicsEnRonda > this.record) {
                         this.record = this.clicsEnRonda;

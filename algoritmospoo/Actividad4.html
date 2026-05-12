@@ -120,7 +120,7 @@
         }
     }
 
-    // Reto 1: Clase Rombo
+    
     class Rombo extends Figura {
         constructor(d1, d2, color) {
             super(color);
@@ -131,10 +131,10 @@
         dibujarEn(ctx, cx, cy) {
             ctx.fillStyle = this.color;
             ctx.beginPath();
-            ctx.moveTo(cx, cy - this.d2/2); // Arriba
-            ctx.lineTo(cx + this.d1/2, cy); // Derecha
-            ctx.lineTo(cx, cy + this.d2/2); // Abajo
-            ctx.lineTo(cx - this.d1/2, cy); // Izquierda
+            ctx.moveTo(cx, cy - this.d2/2); 
+            ctx.lineTo(cx + this.d1/2, cy); 
+            ctx.lineTo(cx, cy + this.d2/2); 
+            ctx.lineTo(cx - this.d1/2, cy); 
             ctx.fill();
         }
     }
@@ -166,7 +166,7 @@
         document.getElementById("info-figura").innerHTML = `<strong>${figura.descripcion()}</strong>`;
     };
 
-    // Reto 3: Dibujar todas
+    
     const dibujarTodas = () => {
         const { canvas, ctx } = obtenerContexto();
         ctx.clearRect(0, 0, canvas.width, canvas.height);

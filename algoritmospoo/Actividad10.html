@@ -123,7 +123,6 @@
         getMovimientos() { return [...this.#movimientos]; }
         calcularInteres() { return 0; }
 
-        // Serialización para guardar en localStorage
         toJSON() {
             return {
                 id: this.id, titular: this.titular, saldo: this.#saldo,
@@ -141,9 +140,9 @@
         aplicarInteres() {
             const interes = this.calcularInteres();
             if(interes > 0) {
-                // Truco para saltar validaciones estrictas y forzar el registro de interés
+               
                 super.depositar(interes);
-                // Renombramos el último movimiento (que quedó de primero en el unshift)
+               
                 const movs = this.getMovimientos();
                 movs[0].tipo = "interés"; 
             }
@@ -154,46 +153,44 @@
     class CuentaCorriente extends CuentaBancaria {
         constructor(id, titular, saldo, movs = []) {
             super(id, titular, saldo, "corriente", movs);
-            this.sobregiro = 50000; // Permitimos sobregiro de 50,000 COP
+            this.sobregiro = 50000; 
         }
         retirar(monto) {
             if (monto <= 0) throw new Error("Monto inválido");
             if (monto > (this.saldo + this.sobregiro)) {
                 throw new Error(`Supera límite de sobregiro ($${this.sobregiro})`);
             }
-            // Retiro simulado modificando variable protegida (usando super methods)
+            
             if (monto <= this.saldo) {
                 super.retirar(monto);
             } else {
-                // Forzamos el saldo a negativo (sobregiro)
+               
                 const restante = monto - this.saldo;
-                super.retirar(this.saldo); // Dejamos en 0
-                super.retirar(restante * -1); // Bug bypass o usamos setter. Aquí mejor reescribir lógica real:
-                // Dado el scope, lanzaremos error si la lógica base restringe negativos.
-                // En un caso real con # private variables, se necesita un método setter protegido.
+                super.retirar(this.saldo); 
+                super.retirar(restante * -1); 
             }
         }
-        // *Corrección para la demo*: Para evitar errores con el #saldo de la superclase que rechaza saldo insuficiente:
+      
         retirar(monto) {
              if (monto <= 0) throw new Error("Monto inválido");
              if (monto > this.saldo + this.sobregiro) throw new Error("Supera el sobregiro permitido.");
-             // Hack para el sobregiro en esta demo: depositamos negativo si es necesario.
+            
              if(this.saldo >= monto) {
                  super.retirar(monto);
              } else {
-                 super.depositar(monto * -1); // Deposita negativo = resta saldo
+                 super.depositar(monto * -1); 
                  this.getMovimientos()[0].tipo = "retiro (sobregiro)";
              }
         }
     }
 
-    // Reto 2: Cuenta Joven
+    
     class CuentaJoven extends CuentaAhorro {
         constructor(id, titular, saldo, movs = []) {
             super(id, titular, saldo, movs);
             this.tipo = "joven";
-            this.tasaInteres = 0.035; // 3.5%
-            this.limiteDeposito = 500; // Limite en dólares o unidades según la app
+            this.tasaInteres = 0.035; 
+            this.limiteDeposito = 500; 
         }
         depositar(monto) {
             if (monto > this.limiteDeposito) throw new Error(`El límite de depósito por operación es $${this.limiteDeposito}`);
@@ -201,7 +198,7 @@
         }
     }
 
-    // --- GESTIÓN DEL BANCO (Persistencia y Control) ---
+    
     class Banco {
         static CLAVE_STORAGE = "banco_virtual_db";
 
@@ -211,7 +208,7 @@
             this.inicializar();
         }
 
-        // Reto 3: Crear desde JSON (LocalStorage)
+        
         inicializar() {
             const dataStr = localStorage.getItem(Banco.CLAVE_STORAGE);
             if (dataStr) {
@@ -222,7 +219,7 @@
                     if (c.tipo === "joven") return new CuentaJoven(c.id, c.titular, c.saldo, c.movimientos);
                 });
             } else {
-                // Datos de prueba iniciales
+                
                 this.cuentas.push(new CuentaAhorro(Date.now(), "Laura Cristina", 250000));
             }
             this.guardar();
@@ -362,7 +359,7 @@
         }
     }
 
-    // Inicialización general
+    
     const banco = new Banco();
 
     const mostrarTab = (id) => {
@@ -373,7 +370,7 @@
 
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(t => t.classList.remove('activa'));
-        // Identificar el tab clickeado mediante texto
+        
         const mapIds = { 'cuentas': 0, 'nueva': 1, 'stats': 2 };
         tabs[mapIds[id]].classList.add('activa');
     };
